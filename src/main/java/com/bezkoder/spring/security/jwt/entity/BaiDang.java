@@ -33,7 +33,7 @@ public class BaiDang {
     @Column(name = "NgaySua", nullable = false)
     private LocalDate ngaySua;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "dvtt_id", referencedColumnName = "MaDVTT")
     private DonViThucTap donViThucTap;
 }

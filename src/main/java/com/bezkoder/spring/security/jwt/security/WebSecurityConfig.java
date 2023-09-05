@@ -96,6 +96,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/canbo/**").permitAll()
 			.antMatchers("/api/baidang/**").permitAll()
 			.antMatchers("/api/dangky/**").permitAll()
+			.antMatchers("/api/congviec/**").permitAll()
         .anyRequest().authenticated();
     
     http.authenticationProvider(authenticationProvider());
