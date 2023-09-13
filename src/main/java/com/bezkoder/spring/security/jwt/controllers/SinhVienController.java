@@ -36,6 +36,13 @@ public class SinhVienController {
         }
     }
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<SinhVien>> searchSinhVien(@RequestParam String tenSV) {
+        List<SinhVien> sinhVienList = sinhVienService.searchSinhVienByName(tenSV);
+        return ResponseEntity.ok(sinhVienList);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<SinhVien> createSinhVien(@RequestBody SinhVienDto sinhVienDto,
                                                    @RequestParam Integer lopId,

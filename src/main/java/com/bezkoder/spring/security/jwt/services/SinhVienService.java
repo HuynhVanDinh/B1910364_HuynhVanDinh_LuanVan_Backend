@@ -116,6 +116,12 @@ public class SinhVienService {
 
         sinhVienRepository.delete(existingSinhVien);
     }
+    @Transactional
+    public List<SinhVien> searchSinhVienByName(String tenSV) {
+        // Gọi phương thức tìm kiếm trong repository
+        return sinhVienRepository.findByTenSVContainingIgnoreCase(tenSV);
+    }
+
 
     private void sendEmail(String to, String username, String password) {
         String from = "dinhb1910364@student.ctu.edu.vn"; // Địa chỉ email nguồn
