@@ -1,5 +1,6 @@
 package com.bezkoder.spring.security.jwt.services;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
+import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.request.KhoaDto;
 import com.bezkoder.spring.security.jwt.repository.KhoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,5 +55,11 @@ public class KhoaService {
     @Transactional
     public void deleteKhoa(Integer id) {
         khoaRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<Khoa> searchKhoaByName(String khoaName) {
+        // Gọi phương thức tìm kiếm trong repository
+        return khoaRepository.findByKhoaNameContainingIgnoreCase(khoaName);
     }
 }

@@ -49,4 +49,15 @@ public class Khoa implements Serializable {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
+
+    public Integer getId() {
+        return khoaId;
+    }
+
+    public String getTenKhoa() {
+        return khoaName;
+    }
+    public  String getSdt(){
+        return khoaSdt;
+    }
 }

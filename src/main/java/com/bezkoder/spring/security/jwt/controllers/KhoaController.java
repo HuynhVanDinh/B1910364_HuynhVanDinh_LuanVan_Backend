@@ -1,5 +1,6 @@
 package com.bezkoder.spring.security.jwt.controllers;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
+import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.request.KhoaDto;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.KhoaService;
@@ -81,5 +82,11 @@ public class KhoaController {
     public ResponseEntity<MessageResponse> deleteKhoa(@PathVariable Integer id) {
         khoaService.deleteKhoa(id);
         return ResponseEntity.ok(new MessageResponse("Xoá thành khoa thành công!"));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<Khoa>> searchKhoa(@RequestParam String khoaName) {
+        List<Khoa> khoaList = khoaService.searchKhoaByName(khoaName);
+        return ResponseEntity.ok(khoaList);
     }
 }
