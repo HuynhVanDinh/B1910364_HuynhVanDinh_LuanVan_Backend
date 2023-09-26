@@ -34,13 +34,14 @@ public class LopService {
     public Lop createLop(LopDto lopDto, Integer khoaId) {
         Optional<Khoa> khoaOptional = khoaRepository.findById(khoaId);
 
-        khoaOptional.ifPresent(khoa -> {
+        if (khoaOptional.isPresent()) {
+            Khoa khoa = khoaOptional.get();
             Lop lop = new Lop(lopDto.getTenLop(), khoa);
             lopRepository.save(lop);
-        });
-
-        // Trả về hoặc xử lý ngữ cảnh khác tại đây
-        return null;
+            return lop;
+        } else {
+            return null;
+        }
     }
 
     @Transactional
@@ -67,5 +68,11 @@ public class LopService {
     @Transactional
     public void deleteLop(Integer id) {
         lopRepository.deleteById(id);
+    }
+
+    @Transactional
+    public List<Lop> searchLopByName(String tenLop) {
+        // Gọi phương thức tìm kiếm trong repository
+        return lopRepository.findByTenLopContainingIgnoreCase(tenLop);
     }
 }

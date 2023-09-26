@@ -1,5 +1,6 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
+import com.bezkoder.spring.security.jwt.entity.Khoa;
 import com.bezkoder.spring.security.jwt.entity.Lop;
 import com.bezkoder.spring.security.jwt.payload.request.LopDto;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
@@ -74,5 +75,12 @@ public class LopController {
     public ResponseEntity<MessageResponse> deleteLop(@PathVariable Integer id) {
         lopService.deleteLop(id);
         return ResponseEntity.ok(new MessageResponse("Xoá thành lớp thành công!"));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<Lop>> searchLop(@RequestParam String tenLop) {
+        List<Lop> lopList = lopService.searchLopByName(tenLop);
+        return ResponseEntity.ok(lopList);
     }
 }

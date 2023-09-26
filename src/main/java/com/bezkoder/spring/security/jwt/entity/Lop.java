@@ -32,4 +32,12 @@ public class Lop {
         this.tenLop = tenLop;
         this.khoa = khoa;
     }
+    public Integer getId(){
+        return lopId;
+    }
+
+    public String getTen(){
+        return tenLop;
+    }
+
 }

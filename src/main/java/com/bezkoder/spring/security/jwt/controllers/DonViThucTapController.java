@@ -1,6 +1,7 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
 import com.bezkoder.spring.security.jwt.entity.DonViThucTap;
+import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.request.DonViThucTapDto;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.DonViThucTapService;
@@ -48,8 +49,9 @@ public class DonViThucTapController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateDonViThucTap(
             @PathVariable Integer id,
+            @RequestParam String email,
             @Valid @RequestBody DonViThucTapDto donViThucTapDto) {
-        DonViThucTap updatedDonViThucTap = donViThucTapService.updateDonViThucTap(id, donViThucTapDto);
+        DonViThucTap updatedDonViThucTap = donViThucTapService.updateDonViThucTap(id, donViThucTapDto, email);
         if (updatedDonViThucTap != null) {
             return ResponseEntity.ok(new MessageResponse("Cập nhật đơn vị thực tập thành công!"));
         } else {
@@ -61,5 +63,11 @@ public class DonViThucTapController {
     public ResponseEntity<?> deleteDonViThucTap(@PathVariable Integer id) {
         donViThucTapService.deleteDonViThucTap(id);
         return ResponseEntity.ok(new MessageResponse("Xóa đơn vị thực tập thành công!"));
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<DonViThucTap>> searchDonVi(@RequestParam String tenDvtt) {
+        List<DonViThucTap> donViThucTapList = donViThucTapService.searchDonViThucTapByName(tenDvtt);
+        return ResponseEntity.ok(donViThucTapList);
     }
 }

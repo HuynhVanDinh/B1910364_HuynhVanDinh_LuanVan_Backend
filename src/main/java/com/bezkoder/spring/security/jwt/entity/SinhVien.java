@@ -19,6 +19,9 @@ public class SinhVien {
     @Column(name = "TenSV", nullable = false)
     private String tenSV;
 
+    @Column( name = "HinhAnh", nullable = false)
+    private  String hinhAnh;
+
     @Column(name = "GioiTinh", nullable = false)
     private String gioiTinh;
 
@@ -39,8 +42,9 @@ public class SinhVien {
     public SinhVien() {
     }
 
-    public SinhVien(String tenSV, String gioiTinh, LocalDate ngaySinh, String queQuan, Lop lop) {
+    public SinhVien(String tenSV, String hinhAnh, String gioiTinh, LocalDate ngaySinh, String queQuan, Lop lop) {
         this.tenSV = tenSV;
+        this.hinhAnh = hinhAnh;
         this.gioiTinh = gioiTinh;
         this.ngaySinh = ngaySinh;
         this.queQuan = queQuan;

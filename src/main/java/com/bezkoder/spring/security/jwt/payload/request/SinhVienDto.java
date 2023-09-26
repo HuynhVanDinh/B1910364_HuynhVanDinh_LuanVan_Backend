@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Data
 public class SinhVienDto {
     private String tenSV;
+    private String hinhAnh;
     private String gioiTinh;
     private LocalDate ngaySinh;
     private String queQuan;

@@ -50,11 +50,13 @@ public class SinhVienService {
         } else {
             SinhVien sinhVien = new SinhVien(
                     sinhVienDto.getTenSV(),
+                    sinhVienDto.getHinhAnh(),
                     sinhVienDto.getGioiTinh(),
                     sinhVienDto.getNgaySinh(),
                     sinhVienDto.getQueQuan(),
                     lop
             );
+            sinhVien.setHinhAnh("user.png");
 
             SinhVien savedSinhVien = sinhVienRepository.save(sinhVien);
             String tenSV = savedSinhVien.getTenSV().replaceAll(" ", "").toLowerCase();
@@ -92,18 +94,22 @@ public class SinhVienService {
 
     }
     @Transactional
-    public SinhVien updateSinhVien(Integer sinhvienId, SinhVienDto sinhVienDto, Integer lopId) {
+    public SinhVien updateSinhVien(Integer sinhvienId, SinhVienDto sinhVienDto, Integer lopId, String email) {
         SinhVien existingSinhVien = getSinhVienById(sinhvienId);
         Lop lop = lopRepository.findById(lopId).orElse(null);
-        if (lop != null) {
+        if (lop == null ) {
             return null;
 
         } else {
             existingSinhVien.setTenSV(sinhVienDto.getTenSV());
+//            existingSinhVien.setHinhAnh("user.png");
             existingSinhVien.setGioiTinh(sinhVienDto.getGioiTinh());
             existingSinhVien.setNgaySinh(sinhVienDto.getNgaySinh());
             existingSinhVien.setQueQuan(sinhVienDto.getQueQuan());
             existingSinhVien.setLop(lop);
+            // Cập nhật thông tin của Account
+            Account account = existingSinhVien.getAccount();
+            account.setEmail(email);
 
             return sinhVienRepository.save(existingSinhVien);
         }

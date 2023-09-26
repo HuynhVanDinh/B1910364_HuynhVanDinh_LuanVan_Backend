@@ -59,12 +59,15 @@ public class DonViThucTapService {
     }
 
     @Transactional
-    public DonViThucTap updateDonViThucTap(Integer id, DonViThucTapDto donViThucTapDto) {
+    public DonViThucTap updateDonViThucTap(Integer id, DonViThucTapDto donViThucTapDto, String email) {
         DonViThucTap existingDonViThucTap = getDonViThucTapById(id);
         if (existingDonViThucTap != null) {
             existingDonViThucTap.setTenDvtt(donViThucTapDto.getTenDvtt());
             existingDonViThucTap.setDiaChi(donViThucTapDto.getDiaChi());
             existingDonViThucTap.setSoDt(donViThucTapDto.getSoDt());
+            // Cập nhật thông tin của Account
+            Account account = existingDonViThucTap.getAccount();
+            account.setEmail(email);
             return donViThucTapRepository.save(existingDonViThucTap);
         }
         return null;
@@ -77,5 +80,11 @@ public class DonViThucTapService {
         if (existingDonViThucTap != null) {
             donViThucTapRepository.delete(existingDonViThucTap);
         }
+    }
+
+    @Transactional
+    public List<DonViThucTap> searchDonViThucTapByName(String tenDvtt) {
+        // Gọi phương thức tìm kiếm trong repository
+        return donViThucTapRepository.findByTenDvttContainingIgnoreCase(tenDvtt);
     }
 }

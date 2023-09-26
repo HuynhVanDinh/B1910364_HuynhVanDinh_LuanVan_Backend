@@ -1,6 +1,10 @@
 package com.bezkoder.spring.security.jwt.controllers;
+import com.bezkoder.spring.security.jwt.entity.DonViThucTap;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
+import com.bezkoder.spring.security.jwt.entity.Lop;
+import com.bezkoder.spring.security.jwt.services.DonViThucTapService;
 import com.bezkoder.spring.security.jwt.services.KhoaService;
+import com.bezkoder.spring.security.jwt.services.LopService;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -24,7 +28,10 @@ import java.util.List;
 public class PdfController {
     @Autowired
     private KhoaService khoaService;
-
+    @Autowired
+    private LopService lopService;
+    @Autowired
+    private DonViThucTapService donviService;
 //    @GetMapping("/khoa")
 //    public void exportKhoaToPdf(HttpServletResponse response) throws IOException, DocumentException {
 //        response.setContentType("application/pdf");
@@ -130,6 +137,152 @@ public class PdfController {
             table.addCell(cellMaKhoa);
             table.addCell(cellTenKhoa);
             table.addCell(cellSdt);
+        }
+        document.add(new Paragraph("\n"));
+        document.add(table);
+
+        document.close();
+
+        byte[] pdfBytes = baos.toByteArray();
+        response.setContentLength(pdfBytes.length);
+        OutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.close();
+    }
+
+    @GetMapping("/lop")
+    public void displayLopPdf(HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf; charset=UTF-8");
+        String fontPath = "src/main/resources/times.ttf";
+        List<Lop> LopList = lopService.getAllLop();
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Tạo font và định dạng
+//        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+//        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18, BaseColor.BLACK);
+        BaseFont customBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(customBaseFont, 18, Font.NORMAL, BaseColor.BLACK);
+        Font contentFont = new Font(customBaseFont, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+
+
+
+//        Font contentFont = FontFactory.getFont(FontFactory.HELVETICA, 12, BaseColor.DARK_GRAY);
+
+        // Định dạng tiêu đề
+        Paragraph title = new Paragraph("DANH SÁCH CÁC LỚP", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Định dạng nội dung
+        PdfPTable table = new PdfPTable(2);
+        table.setWidthPercentage(100);
+
+        // Tiêu đề cho từng cột
+        PdfPCell cell1 = new PdfPCell(new Phrase("Mã Lớp", contentFont));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Tên Lớp", contentFont));
+//        PdfPCell cell3 = new PdfPCell(new Phrase("khoa", contentFont));
+        // Đặt kích thước và định dạng cho cột
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+//        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+
+        table.addCell(cell1);
+        table.addCell(cell2);
+//        table.addCell(cell3);
+
+        // Thêm dữ liệu từ danh sách các khoa
+        for (Lop lop : LopList) {
+            PdfPCell cellMaLop = new PdfPCell(new Phrase(String.valueOf(lop.getLopId()), contentFont));
+            PdfPCell cellTenLop = new PdfPCell(new Phrase(lop.getTen(), contentFont));
+//            PdfPCell cellKhoa = new PdfPCell(new Phrase(lop.getKhoa(), contentFont));
+
+            cellMaLop.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTenLop.setHorizontalAlignment(Element.ALIGN_CENTER);
+//            cellKhoa.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+            table.addCell(cellMaLop);
+            table.addCell(cellTenLop);
+//            table.addCell(cellKhoa);
+        }
+        document.add(new Paragraph("\n"));
+        document.add(table);
+
+        document.close();
+
+        byte[] pdfBytes = baos.toByteArray();
+        response.setContentLength(pdfBytes.length);
+        OutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.close();
+    }
+    @GetMapping("/donvi")
+    public void displayDonViPdf(HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf; charset=UTF-8");
+        String fontPath = "src/main/resources/times.ttf";
+        List<DonViThucTap> DonViThucTapList = donviService.getAllDonViThucTap();
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Tạo font và định dạng
+        BaseFont customBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(customBaseFont, 18, Font.NORMAL, BaseColor.BLACK);
+        Font contentFont = new Font(customBaseFont, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+
+        // Định dạng tiêu đề
+        Paragraph title = new Paragraph("DANH SÁCH CÁC ĐƠN VỊ", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Định dạng nội dung
+        PdfPTable table = new PdfPTable(4);
+        table.setWidthPercentage(100);
+
+        // Tiêu đề cho từng cột
+        PdfPCell cell1 = new PdfPCell(new Phrase("Mã đơn vị", contentFont));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Tên đơn vị", contentFont));
+        PdfPCell cell3 = new PdfPCell(new Phrase("Số điện thoại", contentFont));
+        PdfPCell cell4 = new PdfPCell(new Phrase("Địa chỉ", contentFont));
+
+        // Đặt kích thước và định dạng cho cột
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        table.addCell(cell1);
+        table.addCell(cell2);
+        table.addCell(cell3);
+        table.addCell(cell4);
+
+
+        // Thêm dữ liệu từ danh sách các khoa
+        for (DonViThucTap donvi : DonViThucTapList) {
+            PdfPCell cellMaDv = new PdfPCell(new Phrase(String.valueOf(donvi.getMaDvtt()), contentFont));
+            PdfPCell cellTenDv = new PdfPCell(new Phrase(donvi.getTenDvtt(), contentFont));
+            PdfPCell cellDiaChi = new PdfPCell(new Phrase(donvi.getDiaChi(), contentFont));
+            PdfPCell cellSoDt = new PdfPCell(new Phrase(donvi.getSoDt(), contentFont));
+
+
+            cellMaDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTenDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellDiaChi.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellSoDt.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            table.addCell(cellMaDv);
+            table.addCell(cellTenDv);
+            table.addCell(cellSoDt);
+            table.addCell(cellDiaChi);
+
         }
         document.add(new Paragraph("\n"));
         document.add(table);

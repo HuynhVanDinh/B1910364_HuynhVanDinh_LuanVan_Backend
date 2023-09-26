@@ -2,6 +2,7 @@ package com.bezkoder.spring.security.jwt.controllers;
 
 import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.request.SinhVienDto;
+import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.SinhVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,11 +54,18 @@ public class SinhVienController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sinhvienId}")
-    public ResponseEntity<SinhVien> updateSinhVien(@PathVariable Integer sinhvienId,
+    public ResponseEntity<MessageResponse> updateSinhVien(@PathVariable Integer sinhvienId,
                                                    @RequestBody SinhVienDto sinhVienDto,
-                                                   @RequestParam Integer lopId) {
-        SinhVien updatedSinhVien = sinhVienService.updateSinhVien(sinhvienId, sinhVienDto, lopId);
-        return ResponseEntity.ok(updatedSinhVien);
+                                                   @RequestParam Integer lopId,
+                                                   @RequestParam String email
+    ) {
+        SinhVien updatedSinhVien = sinhVienService.updateSinhVien(sinhvienId, sinhVienDto, lopId, email);
+        if (updatedSinhVien != null) {
+            return ResponseEntity.ok(new MessageResponse("Cập nhật sinh viên thành công!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+//        return ResponseEntity.ok(updatedSinhVien);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{sinhvienId}")
