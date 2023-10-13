@@ -21,6 +21,9 @@ public class CanBo {
     @Column(name = "TenCB", nullable = false)
     private String tenCB;
 
+    @Column(name = "hinhAnh", nullable = false)
+    private String hinhAnh;
+
     @Column(name = "GTinh", nullable = false)
     private String gTinh;
 
@@ -38,9 +41,10 @@ public class CanBo {
     @JoinColumn(name = "account_id")
     private Account account;
 
-    public CanBo(String tenCB, String gTinh, LocalDate ngSinh, String sdtCB, DonViThucTap donViThucTap){
+    public CanBo(String tenCB, String gTinh, String hinhAnh, LocalDate ngSinh, String sdtCB, DonViThucTap donViThucTap){
         this.tenCB = tenCB;
         this.gTinh = gTinh;
+        this.hinhAnh = hinhAnh;
         this.ngSinh = ngSinh;
         this.sdtCB = sdtCB;
         this.donViThucTap = donViThucTap;

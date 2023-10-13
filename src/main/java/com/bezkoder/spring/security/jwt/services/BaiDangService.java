@@ -33,7 +33,7 @@ public class BaiDangService {
     }
 
     public BaiDang createBaiDang(BaiDangDto baiDangDto, Integer donViThucTapId) {
-        DonViThucTap donViThucTap = donViThucTapRepository.findById(donViThucTapId).orElse(null);
+        DonViThucTap donViThucTap = donViThucTapRepository.findByAccountId(donViThucTapId).orElse(null);
 
         if (donViThucTap == null) {
             return null;
@@ -52,7 +52,7 @@ public class BaiDangService {
 
     public BaiDang updateBaiDang(Integer baiDangId, BaiDangDto baiDangDto, Integer donViThucTapId) {
         BaiDang existingBaiDang = getBaiDangById(baiDangId);
-        DonViThucTap donViThucTap = donViThucTapRepository.findById(donViThucTapId).orElse(null);
+        DonViThucTap donViThucTap = donViThucTapRepository.findByAccountId(donViThucTapId).orElse(null);
 
         if (existingBaiDang == null || donViThucTap == null) {
             return null;

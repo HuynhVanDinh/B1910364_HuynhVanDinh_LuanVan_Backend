@@ -21,7 +21,7 @@ public class DangKy {
     private String bangDiem;
 
     @Column(name = "cv", nullable = false)
-    private String sv;
+    private String cv;
 
     @Column(name = "trangThai", nullable = false)
     private Integer trangThai;
@@ -34,11 +34,12 @@ public class DangKy {
     @JoinColumn(name = "ma_sv", referencedColumnName = "MaSV")
     private SinhVien sinhVien;
 
-    public DangKy(String bangDiem, String sv, BaiDang baiDang, SinhVien sinhVien){
-        this.baiDang = baiDang;
-        this.sv = sv;
-        this.trangThai =  1;
+    public DangKy(String bangDiem, String cv, int trangThai, BaiDang baiDang, SinhVien sinhVien){
         this.bangDiem = bangDiem;
+
+        this.cv = cv;
+        this.trangThai =  trangThai;
+        this.baiDang = baiDang;
         this.sinhVien = sinhVien;
     }
 

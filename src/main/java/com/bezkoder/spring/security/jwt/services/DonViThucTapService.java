@@ -28,7 +28,9 @@ public class DonViThucTapService {
     public List<DonViThucTap> getAllDonViThucTap() {
         return donViThucTapRepository.findAll();
     }
-
+    public DonViThucTap getDonViThucTapByAccountId(Integer accountid) {
+        return donViThucTapRepository.findByAccountId(accountid).orElse(null);
+    }
     public DonViThucTap getDonViThucTapById(Integer id) {
         return donViThucTapRepository.findById(id).orElse(null);
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.bezkoder.spring.security.jwt.entity.Account;
 
 @Repository
-public interface UserRepository extends JpaRepository<Account, Long> {
+public interface UserRepository extends JpaRepository<Account, Integer> {
   Optional<Account> findByUsername(String username);
   Optional<Account> findByEmail(String email);
   Boolean existsByUsername(String username);

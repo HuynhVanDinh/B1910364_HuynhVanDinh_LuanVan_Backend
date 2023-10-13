@@ -159,7 +159,7 @@ public class AuthController {
   @PostMapping("/signout")
   public ResponseEntity<?> logoutUser() {
     UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Long userId = userDetails.getId();
+    Integer userId = userDetails.getId();
     refreshTokenService.deleteByUserId(userId);
     return ResponseEntity.ok(new MessageResponse("Log out successful!"));
   }

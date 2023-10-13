@@ -36,4 +36,5 @@ public class BaiDang {
     @OneToOne
     @JoinColumn(name = "dvtt_id", referencedColumnName = "MaDVTT")
     private DonViThucTap donViThucTap;
+
 }

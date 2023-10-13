@@ -4,12 +4,14 @@ import com.bezkoder.spring.security.jwt.payload.request.DangKyDto;
 import com.bezkoder.spring.security.jwt.entity.DangKy;
 import com.bezkoder.spring.security.jwt.entity.BaiDang;
 import com.bezkoder.spring.security.jwt.entity.SinhVien;
+import com.bezkoder.spring.security.jwt.payload.request.RegistrationStatus;
 import com.bezkoder.spring.security.jwt.repository.DangKyRepository;
 import com.bezkoder.spring.security.jwt.services.DangKyService;
 import com.bezkoder.spring.security.jwt.services.BaiDangService;
 import com.bezkoder.spring.security.jwt.services.SinhVienService;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -43,11 +45,22 @@ public class DangKyController {
             if (createdDangKy != null) {
                 return ResponseEntity.ok(new MessageResponse("Đăng ký thành công!"));
             } else {
+                if(baiDang.getSoLuong()==0){
+                    return ResponseEntity.badRequest().body(new MessageResponse("Xin lỗi...Số lượng không đủ"));
+                }
                 return ResponseEntity.badRequest().body(new MessageResponse("Đăng ký không thành công. Sinh viên đã đăng ký bài đăng này trước đó."));
             }
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy bài đăng hoặc sinh viên tương ứng."));
         }
+    }
+    @GetMapping("/check-registration")
+    public ResponseEntity<RegistrationStatus> checkRegistration(
+            @RequestParam Integer sinhVienId,
+            @RequestParam Integer baiDangId
+    ) {
+        boolean isRegistered = dangKyService.isBaiDangRegistered(sinhVienId, baiDangId);
+        return ResponseEntity.ok(new RegistrationStatus(isRegistered));
     }
 
     @GetMapping("/{dangKyId}")
@@ -59,11 +72,28 @@ public class DangKyController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @GetMapping("/{sinhVienId}/baidangdadangky")
+    public ResponseEntity<List<DangKy>> getBaiDangDaDangKyCuaSinhVien(@PathVariable Integer sinhVienId) {
+        List<DangKy> danhSachDangKy = dangKyService.getBaiDangDaDangKyCuaSinhVien(sinhVienId);
+        if (danhSachDangKy != null && !danhSachDangKy.isEmpty()) {
+            return new ResponseEntity<>(danhSachDangKy, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @GetMapping
     public ResponseEntity<List<DangKy>> getAllDangKy() {
         List<DangKy> dangKyList = dangKyService.getAllDangKy();
         return ResponseEntity.ok(dangKyList);
+    }
+    @GetMapping("/{maDvtt}/dangky")
+    public ResponseEntity<List<DangKy>> getAllDangKyByMaDvtt(@PathVariable Integer maDvtt) {
+        List<DangKy> danhSachDangKy = dangKyService.getAllDangKyByMaDvtt(maDvtt);
+        if (!danhSachDangKy.isEmpty()) {
+            return new ResponseEntity<>(danhSachDangKy, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PreAuthorize("hasRole('STUDENT')")
@@ -93,6 +123,18 @@ public class DangKyController {
 //            return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy bài đăng hoặc sinh viên tương ứng."));
 //        }
     }
-
+    @PutMapping("/{maDK}/capnhattrangthai")
+    public ResponseEntity<MessageResponse> capNhatTrangThaiDangKy(@PathVariable Integer maDK,@RequestBody Integer baiDangId, @RequestParam Integer trangThaiMoi) {
+        DangKy dangKy = dangKyService.updateTrangThaiDangKy(maDK, baiDangId, trangThaiMoi);
+        if (dangKy != null) {
+            return ResponseEntity.ok(new MessageResponse("Cập nhật đăng ký thành công!"));
+        } else {
+            BaiDang baiDang = baiDangService.getBaiDangById(baiDangId);
+            if(baiDang.getSoLuong() == 0){
+                return ResponseEntity.badRequest().body(new MessageResponse("Không thể tiếp nhận. Đã đủ số lượng"));
+            }
+            return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy mã đăng ký"));
+        }
+    }
 
 }

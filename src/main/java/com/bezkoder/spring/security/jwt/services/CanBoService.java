@@ -31,6 +31,12 @@ public class CanBoService {
     public CanBo getCanBoById(Integer id) {
         return canBoRepository.findById(id).orElse(null);
     }
+    public CanBo getCanBoByAccountId(Integer accountid) {
+        return canBoRepository.findByAccountId(accountid).orElse(null);
+    }
+    public List<CanBo> getCanBoByDonViThucTap(DonViThucTap dvttid) {
+        return canBoRepository.findByDonViThucTap(dvttid);
+    }
     @Transactional
     public CanBo createCanBo(CanBoDto canBoDto, Integer donViThucTapId, String username, String password, String email) {
         DonViThucTap donViThucTap = donViThucTapRepository.findById(donViThucTapId).orElse(null);
@@ -42,6 +48,7 @@ public class CanBoService {
         CanBo canBo = new CanBo(
                 canBoDto.getTenCB(),
                 canBoDto.getGioiTinh(),
+                canBoDto.getHinhAnh(),
                 canBoDto.getNgSinh(),
                 canBoDto.getSdtCB(),
                 donViThucTap

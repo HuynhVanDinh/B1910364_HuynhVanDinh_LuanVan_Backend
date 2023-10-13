@@ -6,6 +6,7 @@ import com.bezkoder.spring.security.jwt.payload.request.DonViThucTapDto;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.DonViThucTapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +70,14 @@ public class DonViThucTapController {
     public ResponseEntity<List<DonViThucTap>> searchDonVi(@RequestParam String tenDvtt) {
         List<DonViThucTap> donViThucTapList = donViThucTapService.searchDonViThucTapByName(tenDvtt);
         return ResponseEntity.ok(donViThucTapList);
+    }
+    @GetMapping("/account/{accountid}")
+    public ResponseEntity<DonViThucTap> getDonViThucTapByAccountId(@PathVariable Integer accountid) {
+        DonViThucTap dvtt = donViThucTapService.getDonViThucTapByAccountId(accountid);
+        if (dvtt != null) {
+            return new ResponseEntity<>(dvtt, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

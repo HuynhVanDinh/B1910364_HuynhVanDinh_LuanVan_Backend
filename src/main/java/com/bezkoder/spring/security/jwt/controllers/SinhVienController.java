@@ -36,6 +36,15 @@ public class SinhVienController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/account/{accountid}")
+    public ResponseEntity<SinhVien> getSinhVienByAccountId(@PathVariable Integer accountid) {
+        SinhVien sinhVien = sinhVienService.getSinhVienByAccountId(accountid);
+        if (sinhVien != null) {
+            return new ResponseEntity<>(sinhVien, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<List<SinhVien>> searchSinhVien(@RequestParam String tenSV) {
@@ -66,6 +75,19 @@ public class SinhVienController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 //        return ResponseEntity.ok(updatedSinhVien);
+    }
+    @PreAuthorize("hasRole('STUDENT')")
+    @PutMapping("/{sinhvienId}/capnhatanhdien")
+    public ResponseEntity<MessageResponse> updateAvt(@PathVariable Integer sinhvienId,
+                                                          @RequestBody String hinhAnh
+
+    ) {
+        SinhVien updatedAvt = sinhVienService.updateAvt(sinhvienId,hinhAnh);
+        if (updatedAvt != null) {
+            return ResponseEntity.ok(new MessageResponse("Cập nhật ảnh diện thành công!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{sinhvienId}")

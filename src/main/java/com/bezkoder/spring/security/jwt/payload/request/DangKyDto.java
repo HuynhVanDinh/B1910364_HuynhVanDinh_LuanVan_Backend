@@ -6,7 +6,7 @@ import lombok.Data;
 public class DangKyDto {
     private String bangDiem;
 
-    private String sv;
+    private String cv;
 
     private Integer trangThai;
 }

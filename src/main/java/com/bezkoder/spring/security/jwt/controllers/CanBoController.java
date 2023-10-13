@@ -1,7 +1,10 @@
 package com.bezkoder.spring.security.jwt.controllers;
+import com.bezkoder.spring.security.jwt.entity.DonViThucTap;
+import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.entity.CanBo;
 import com.bezkoder.spring.security.jwt.services.CanBoService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -50,6 +53,24 @@ public class CanBoController {
     public ResponseEntity<List<CanBo>> getAllCanBo() {
         List<CanBo> canBoList = canBoService.getAllCanBo();
         return ResponseEntity.ok(canBoList);
+    }
+    @GetMapping("/account/{accountid}")
+    public ResponseEntity<CanBo> getCanBoByAccountId(@PathVariable Integer accountid) {
+        CanBo canBo = canBoService.getCanBoByAccountId(accountid);
+        if (canBo != null) {
+            return new ResponseEntity<>(canBo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/listcanbo/{dvttid}")
+    public ResponseEntity<List<CanBo>> getCanBoByDonViThucTap(@PathVariable DonViThucTap dvttid) {
+        List<CanBo> canBo = canBoService.getCanBoByDonViThucTap(dvttid);
+        if (canBo != null) {
+            return new ResponseEntity<>(canBo, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
     @PreAuthorize("hasRole('UNIT')")
     @PutMapping("/{canBoId}")

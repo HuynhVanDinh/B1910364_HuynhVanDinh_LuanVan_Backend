@@ -1,6 +1,7 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
 import com.bezkoder.spring.security.jwt.payload.request.BaiDangDto;
+import com.bezkoder.spring.security.jwt.payload.request.RegistrationStatus;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.entity.BaiDang;
 import com.bezkoder.spring.security.jwt.entity.DonViThucTap;

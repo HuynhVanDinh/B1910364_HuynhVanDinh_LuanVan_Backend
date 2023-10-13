@@ -15,6 +15,8 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.text.Normalizer;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import java.util.List;
@@ -40,6 +42,9 @@ public class SinhVienService {
     public SinhVien getSinhVienById(Integer id) {
         return sinhVienRepository.findById(id).orElse(null);
     }
+    public SinhVien getSinhVienByAccountId(Integer accountid) {
+        return sinhVienRepository.findByAccountId(accountid).orElse(null);
+    }
     @Transactional
     public SinhVien createSinhVien(SinhVienDto sinhVienDto, Integer lopId, String email) {
         Lop lop = lopRepository.findById(lopId).orElse(null);
@@ -56,7 +61,7 @@ public class SinhVienService {
                     sinhVienDto.getQueQuan(),
                     lop
             );
-            sinhVien.setHinhAnh("user.png");
+//            sinhVien.setHinhAnh(this.getCurrentDateTime()+"user.png");
 
             SinhVien savedSinhVien = sinhVienRepository.save(sinhVien);
             String tenSV = savedSinhVien.getTenSV().replaceAll(" ", "").toLowerCase();
@@ -93,6 +98,12 @@ public class SinhVienService {
         }
 
     }
+
+    private String getCurrentDateTime() {
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return now.format(formatter);
+    }
     @Transactional
     public SinhVien updateSinhVien(Integer sinhvienId, SinhVienDto sinhVienDto, Integer lopId, String email) {
         SinhVien existingSinhVien = getSinhVienById(sinhvienId);
@@ -114,6 +125,12 @@ public class SinhVienService {
             return sinhVienRepository.save(existingSinhVien);
         }
 
+    }
+    @Transactional
+    public SinhVien updateAvt(Integer sinhvienId, String hinhAnh) {
+        SinhVien existingSinhVien = getSinhVienById(sinhvienId);
+            existingSinhVien.setHinhAnh(hinhAnh);
+            return sinhVienRepository.save(existingSinhVien);
     }
 
     @Transactional
