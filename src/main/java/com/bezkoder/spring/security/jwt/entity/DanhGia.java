@@ -27,4 +27,11 @@ public class DanhGia {
     @ManyToOne
     @JoinColumn(name = "MaCB", referencedColumnName = "MaCB")
     private CanBo canBoHuongDan;
+
+    public DanhGia( String noidungDG, Tuan tuan, SinhVien sinhVien, CanBo canBo){
+        this.noidungDG = noidungDG;
+        this.tuan = tuan;
+        this.sinhVien = sinhVien;
+        this.canBoHuongDan = canBo;
+    }
 }
