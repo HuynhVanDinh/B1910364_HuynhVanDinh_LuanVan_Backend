@@ -5,6 +5,7 @@ import com.bezkoder.spring.security.jwt.payload.request.CongViecDto;
 import com.bezkoder.spring.security.jwt.repository.CanBoRepository;
 import com.bezkoder.spring.security.jwt.repository.CongViecRepository;
 import com.bezkoder.spring.security.jwt.repository.SinhVienRepository;
+import com.bezkoder.spring.security.jwt.repository.TuanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,8 @@ public class CongViecService {
     @Autowired
     private CanBoRepository canBoRepository;
     @Autowired
+    private TuanRepository tuanRepository;
+    @Autowired
     public CongViecService(CongViecRepository congViecRepository) {
         this.congViecRepository = congViecRepository;
     }
@@ -31,17 +34,18 @@ public class CongViecService {
         return congViecRepository.findById(id).orElse(null);
     }
 
-    public CongViec createCongViec(CongViecDto congViecDto, Integer sinhVienId, Integer canBoId) {
+    public CongViec createCongViec(CongViecDto congViecDto,Integer tuan, Integer sinhVienId, Integer canBoId) {
         SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
         CanBo canBo = canBoRepository.findById(canBoId).orElse(null);
-        if (sinhVien == null || canBo == null) {
+        Tuan id_tuan = tuanRepository.findById(tuan).orElse(null);
+        if (sinhVien == null || canBo == null || id_tuan == null) {
             return null;
         }
         CongViec congViec = new CongViec(
         congViecDto.getMota(),
         congViecDto.getTienDo(),
-        congViecDto.getNgayBatDau(),
-        congViecDto.getNgayKetThuc(),
+        congViecDto.getTrangThaiCV(),
+        id_tuan,
         sinhVien,
         canBo
         );
@@ -60,8 +64,7 @@ public class CongViecService {
         if (existingCongViec != null) {
             existingCongViec.setMota(congViecDto.getMota());
             existingCongViec.setTienDo(congViecDto.getTienDo());
-            existingCongViec.setNgayBatDau(congViecDto.getNgayBatDau());
-            existingCongViec.setNgayKetThuc(congViecDto.getNgayKetThuc());
+
             existingCongViec.setSinhVien(sinhVien);
             existingCongViec.setCanBo(canBo);
 

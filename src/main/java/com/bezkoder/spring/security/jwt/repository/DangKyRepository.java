@@ -9,11 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DangKyRepository extends JpaRepository<DangKy, Integer> {
     long countBySinhVienAndBaiDang(SinhVien sinhVien, BaiDang baiDang);
     boolean existsBySinhVienAndBaiDang(SinhVien maSV, BaiDang baiDangId);
 
     List<DangKy> findBySinhVien(SinhVien sinhVienId);
+
+    List<DangKy> findBySinhVienAndTrangThai(SinhVien sinhVienId, Integer trangThai);
     List<DangKy> findByBaiDangDonViThucTapMaDvtt(Integer maDvtt);
+
+    Optional<DangKy> findByBaiDangDonViThucTapMaDvttAndSinhVien(Integer maDvtt, SinhVien sinhvienid);
 }

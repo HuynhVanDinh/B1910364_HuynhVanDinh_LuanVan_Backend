@@ -24,11 +24,17 @@ public class CongViec {
     @Column(name = "TienDo", nullable = false)
     private int tienDo;
 
-    @Column(name = "NgayBatDau", nullable = false)
-    private LocalDate ngayBatDau;
+    @Column(name = "TrangThaiCV")
+    private Integer trangThaiCV;
+    @ManyToOne
+    @JoinColumn(name = "id_tuan", referencedColumnName = "id_tuan")
+    private Tuan tuan;
 
-    @Column(name = "NgayKetThuc", nullable = false)
-    private LocalDate ngayKetThuc;
+//    @Column(name = "NgayBatDau", nullable = false)
+//    private LocalDate ngayBatDau;
+//
+//    @Column(name = "NgayKetThuc", nullable = false)
+//    private LocalDate ngayKetThuc;
 
     @ManyToOne
     @JoinColumn(name = "MaSinhVien", referencedColumnName = "MaSV")  // Liên kết với bảng SinhVien qua trường MaSinhVien
@@ -38,11 +44,13 @@ public class CongViec {
     @JoinColumn(name = "MaCanBo", referencedColumnName = "MaCB")  // Liên kết với bảng CanBo qua trường MaCanBo
     private CanBo canBo;
 
-    public CongViec(String mota, int tienDo, LocalDate ngayBatDau, LocalDate ngayKetThuc, SinhVien sinhVien, CanBo canBo){
+    public CongViec(String mota, int tienDo, Integer trangThaiCV, Tuan tuan,SinhVien sinhVien, CanBo canBo){
         this.mota = mota;
         this.tienDo = tienDo;
-        this.ngayBatDau = ngayBatDau;
-        this.ngayKetThuc = ngayKetThuc;
+        this.trangThaiCV = trangThaiCV;
+        this.tuan = tuan;
+//        this.ngayBatDau = ngayBatDau;
+//        this.ngayKetThuc = ngayKetThuc;
         this.sinhVien = sinhVien;
         this.canBo = canBo;
     }

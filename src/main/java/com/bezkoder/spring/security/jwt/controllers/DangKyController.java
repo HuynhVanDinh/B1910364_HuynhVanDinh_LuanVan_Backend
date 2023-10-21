@@ -81,6 +81,15 @@ public class DangKyController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/{sinhVienId}/baidangdaduyet")
+    public ResponseEntity<List<DangKy>> getBaiDangDaDuyetCuaSinhVien(@PathVariable Integer sinhVienId) {
+        List<DangKy> danhSachDangKy = dangKyService.getBaiDangDaDangKyCuaSinhVienDaDuyet(sinhVienId);
+        if (danhSachDangKy != null && !danhSachDangKy.isEmpty()) {
+            return new ResponseEntity<>(danhSachDangKy, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @GetMapping
     public ResponseEntity<List<DangKy>> getAllDangKy() {
         List<DangKy> dangKyList = dangKyService.getAllDangKy();

@@ -96,6 +96,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/khoa/**").permitAll()
 			.antMatchers("/api/lop/**").permitAll()
 			.antMatchers("/api/sinhvien/**").permitAll()
+			.antMatchers("/api/giangvien/**").permitAll()
 			.antMatchers("/api/donvithuctap/**").permitAll()
 			.antMatchers("/api/dotthuctap/**").permitAll()
 			.antMatchers("/api/canbo/**").permitAll()
@@ -103,6 +104,9 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/dangky/**").permitAll()
 			.antMatchers("/api/congviec/**").permitAll()
 			.antMatchers("/api/pdf/**").permitAll()
+			.antMatchers("/api/ketquathuctap/**").permitAll()
+			.antMatchers("/api/thoigiandangky/**").permitAll()
+			.antMatchers("/api/tuan/**").permitAll()
         .anyRequest().authenticated();
     
     http.authenticationProvider(authenticationProvider());

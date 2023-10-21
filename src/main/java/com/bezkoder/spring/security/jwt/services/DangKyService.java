@@ -37,6 +37,9 @@ public class DangKyService {
     public List<DangKy> getBaiDangDaDangKyCuaSinhVien(Integer sinhVienId) {
         return dangKyRepository.findBySinhVien( sinhVienRepository.findById(sinhVienId).orElse(null));
     }
+    public List<DangKy> getBaiDangDaDangKyCuaSinhVienDaDuyet(Integer sinhVienId) {
+        return dangKyRepository.findBySinhVienAndTrangThai(sinhVienRepository.findById(sinhVienId).orElse(null), 1);
+    }
     public DangKy getDangKyById(Integer id) {
         return dangKyRepository.findById(id).orElse(null);
     }

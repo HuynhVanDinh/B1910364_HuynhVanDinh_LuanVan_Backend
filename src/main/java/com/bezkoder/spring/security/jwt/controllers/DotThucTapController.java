@@ -1,15 +1,19 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
 import com.bezkoder.spring.security.jwt.entity.DotThucTap;
+import com.bezkoder.spring.security.jwt.entity.Khoa;
 import com.bezkoder.spring.security.jwt.payload.request.DotThucTapDto;
 import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.DotThucTapService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -33,6 +37,12 @@ public class DotThucTapController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public ResponseEntity<List<DotThucTap>> searchKhoa(@RequestParam(required = false)  String tenDot, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate thoiGianBatDau, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate thoiGianKetThuc) {
+        List<DotThucTap> dotThuctapList = dotThucTapService.searchDotThucTapByName(tenDot, thoiGianBatDau, thoiGianKetThuc);
+        return ResponseEntity.ok(dotThuctapList);
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping

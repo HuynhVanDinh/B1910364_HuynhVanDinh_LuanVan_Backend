@@ -42,9 +42,10 @@ public class CongViecController {
     @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<MessageResponse> createCongViec(@Valid @RequestBody CongViecDto congViecDto,
+                                                          @RequestParam Integer id_tuan,
                                                           @RequestParam Integer sinhVienId,
                                                           @RequestParam Integer canBoId) {
-        CongViec createdCongViec = congViecService.createCongViec(congViecDto, sinhVienId, canBoId);
+        CongViec createdCongViec = congViecService.createCongViec(congViecDto, id_tuan, sinhVienId, canBoId);
         if (createdCongViec != null) {
             return ResponseEntity.ok(new MessageResponse("Tạo công việc thành công!"));
         } else {

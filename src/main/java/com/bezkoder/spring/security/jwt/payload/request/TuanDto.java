@@ -5,8 +5,8 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class CongViecDto {
-    private String Mota;
-    private int tienDo;
-    private  Integer trangThaiCV;
+public class TuanDto {
+    private String ten_tuan;
+    private LocalDate batdau;
+    private LocalDate hethan;
 }
