@@ -24,7 +24,11 @@ public class TuanController {
         List<Tuan> tuanList = tuanService.getAllTuan();
         return new ResponseEntity<>(tuanList, HttpStatus.OK);
     }
-
+    @GetMapping("/canbo/{macb}")
+    public ResponseEntity<List<Tuan>> getTuanCanBo(@PathVariable Integer macb) {
+        List<Tuan> tuanList = tuanService.getTuanByCanbo(macb);
+        return new ResponseEntity<>(tuanList, HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Tuan> getTuanById(@PathVariable Integer id) {
         Tuan tuan = tuanService.getTuanById(id);

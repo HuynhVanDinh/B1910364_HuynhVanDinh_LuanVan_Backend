@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class TuanDto {
-    private String ten_tuan;
+//    private String ten_tuan;
     private LocalDate batdau;
     private LocalDate hethan;
 }

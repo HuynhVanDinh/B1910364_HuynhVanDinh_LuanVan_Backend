@@ -40,24 +40,25 @@ public class TuanService {
 
         if (canboOptional.isPresent()) {
             CanBo maCB = canboOptional.get();
+            int soTuansDaTonTai = tuanRepository.countTuansByMaCB(maCB.getMaCB()); // Use getMaCB() to get the ID
+            String tenTuan = "Tuần " + (soTuansDaTonTai + 1);
             Tuan tuan = new Tuan(
-                    tuanDto.getTen_tuan(),
+                    tenTuan,
                     tuanDto.getBatdau(),
                     tuanDto.getHethan(),
                     maCB
             );
             return  tuanRepository.save(tuan);
-
         } else {
             return null;
         }
-
     }
+
     @Transactional
     public Tuan updateTuan(Integer id, TuanDto tuanDto) {
         Tuan existingTuan = getTuanById(id);
         if (existingTuan != null) {
-            existingTuan.setTen_tuan(tuanDto.getTen_tuan());
+//            existingTuan.setTen_tuan(tuanDto.getTen_tuan());
             existingTuan.setBatdau(tuanDto.getBatdau());
             existingTuan.setHethan(tuanDto.getHethan());
             return  tuanRepository.save(existingTuan);
