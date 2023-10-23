@@ -34,6 +34,13 @@ public class CongViecService {
         return congViecRepository.findById(id).orElse(null);
     }
 
+    public List<CongViec> getCongViecBySinhVienAndCanBoAndTuan(Integer sinhVienId, Integer canBoId, Integer id_tuan){
+        SinhVien sinhvien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        CanBo canbo = canBoRepository.findById(canBoId).orElse(null);
+        Tuan tuan = tuanRepository.findById(id_tuan).orElse(null);
+        return congViecRepository.findCongViecBySinhVienAndCanBoAndTuan(sinhvien,canbo,tuan);
+    }
+
     public CongViec createCongViec(CongViecDto congViecDto,Integer tuan, Integer sinhVienId, Integer canBoId) {
         SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
         CanBo canBo = canBoRepository.findById(canBoId).orElse(null);
@@ -44,11 +51,11 @@ public class CongViecService {
         CongViec congViec = new CongViec(
         congViecDto.getMota(),
         congViecDto.getTienDo(),
-        congViecDto.getTrangThaiCV(),
         id_tuan,
         sinhVien,
         canBo
         );
+        congViec.setTrangThaiCV(0);
         congViec.setTienDo(0);
         CongViec saveCongViec = congViecRepository.save(congViec);
         return congViecRepository.save(congViec);
@@ -63,10 +70,10 @@ public class CongViecService {
         }
         if (existingCongViec != null) {
             existingCongViec.setMota(congViecDto.getMota());
-            existingCongViec.setTienDo(congViecDto.getTienDo());
-
-            existingCongViec.setSinhVien(sinhVien);
-            existingCongViec.setCanBo(canBo);
+//            existingCongViec.setTienDo(congViecDto.getTienDo());
+//
+//            existingCongViec.setSinhVien(sinhVien);
+//            existingCongViec.setCanBo(canBo);
 
             return congViecRepository.save(existingCongViec);
         }

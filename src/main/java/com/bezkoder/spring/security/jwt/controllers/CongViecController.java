@@ -39,6 +39,15 @@ public class CongViecController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/{sinhvienId}/{canboId}/{id_tuan}")
+    public ResponseEntity<List<CongViec>> getCongViecBySinhVienAndCanBoAndTuan(@PathVariable Integer sinhvienId, @PathVariable Integer canboId, @PathVariable Integer id_tuan) {
+        List<CongViec> congViec = congViecService.getCongViecBySinhVienAndCanBoAndTuan(sinhvienId,canboId,id_tuan);
+        if (congViec != null) {
+            return ResponseEntity.ok(congViec);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<MessageResponse> createCongViec(@Valid @RequestBody CongViecDto congViecDto,

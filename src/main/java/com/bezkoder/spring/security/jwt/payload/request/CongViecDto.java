@@ -6,7 +6,6 @@ import java.time.LocalDate;
 
 @Data
 public class CongViecDto {
-    private String Mota;
+    private String mota;
     private int tienDo;
-    private  Integer trangThaiCV;
 }

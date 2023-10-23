@@ -44,10 +44,10 @@ public class CongViec {
     @JoinColumn(name = "MaCanBo", referencedColumnName = "MaCB")  // Liên kết với bảng CanBo qua trường MaCanBo
     private CanBo canBo;
 
-    public CongViec(String mota, int tienDo, Integer trangThaiCV, Tuan tuan,SinhVien sinhVien, CanBo canBo){
+    public CongViec(String mota, int tienDo, Tuan tuan,SinhVien sinhVien, CanBo canBo){
         this.mota = mota;
         this.tienDo = tienDo;
-        this.trangThaiCV = trangThaiCV;
+//        this.trangThaiCV = trangThaiCV;
         this.tuan = tuan;
 //        this.ngayBatDau = ngayBatDau;
 //        this.ngayKetThuc = ngayKetThuc;
