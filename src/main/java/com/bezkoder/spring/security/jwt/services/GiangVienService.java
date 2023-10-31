@@ -31,6 +31,11 @@ public class GiangVienService {
     public GiangVien getGiangVienById(Integer id) {
         return giangVienRepository.findById(id).orElse(null);
     }
+
+    public List<GiangVien> getGiangVienByKhoa(Integer khoaId) {
+       Khoa khoa = khoaRepository.findById(khoaId).orElse(null);
+        return giangVienRepository.findByKhoa(khoa);
+    }
     public GiangVien getGiangVienByAccountId(Integer accountid) {
         return giangVienRepository.findByAccountId(accountid).orElse(null);
     }

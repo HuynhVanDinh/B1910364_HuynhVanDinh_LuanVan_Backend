@@ -19,7 +19,12 @@ public class PhieuDiemCanbo {
     @Column(name = "noiDungPD")
     private String noiDungPD;
 
-    public PhieuDiemCanbo(String noiDungPD){
+    @ManyToOne
+    @JoinColumn(name = "muc_id", referencedColumnName = "muc_id")
+    private MucDanhGiaCuaCanBo mucDG;
+
+    public PhieuDiemCanbo(String noiDungPD, MucDanhGiaCuaCanBo mucDG){
         this.noiDungPD = noiDungPD;
+        this.mucDG = mucDG;
     }
 }

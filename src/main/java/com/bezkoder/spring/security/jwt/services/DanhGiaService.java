@@ -1,6 +1,7 @@
 package com.bezkoder.spring.security.jwt.services;
 
 import com.bezkoder.spring.security.jwt.entity.*;
+import com.bezkoder.spring.security.jwt.payload.request.CongViecDto;
 import com.bezkoder.spring.security.jwt.payload.request.DangKyDto;
 import com.bezkoder.spring.security.jwt.payload.request.DanhGiaDto;
 import com.bezkoder.spring.security.jwt.repository.*;
@@ -34,6 +35,12 @@ public class DanhGiaService {
         Tuan tuan = tuanRepository.findById(id_tuan).orElse(null);
         return danhGiaRepository.findByTuan(tuan);
     }
+    public List<DanhGia> getDanhGiaBySinhVienAndCanBoAndTuan(Integer sinhVienId, Integer canBoId, Integer id_tuan){
+        SinhVien sinhvien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        CanBo canbo = canBoRepository.findById(canBoId).orElse(null);
+        Tuan tuan = tuanRepository.findById(id_tuan).orElse(null);
+        return danhGiaRepository.findBySinhVienAndCanBoHuongDanAndTuan(sinhvien,canbo,tuan);
+    }
     public List<DanhGia> getAllDanhGiaSinhVien(Integer sinhVienId) {
         return danhGiaRepository.findBySinhVien( sinhVienRepository.findById(sinhVienId).orElse(null));
     }
@@ -44,26 +51,41 @@ public class DanhGiaService {
         return danhGiaRepository.findById(id).orElse(null);
     }
 
-    public DanhGia createDangKy(DanhGiaDto danhGiaDto, Integer tuan, Integer sinhVien, Integer canBo) {
-        Optional<Tuan> tuanOptional = tuanRepository.findById(tuan);
-        Optional<SinhVien> sinhVienOptional = sinhVienRepository.findById(sinhVien);
-        Optional<CanBo> canBoOptional = canBoRepository.findById(canBo);
-        if(sinhVienOptional.isPresent() || tuanOptional.isPresent() || canBoOptional.isPresent()){
-            SinhVien sinhVienId = sinhVienOptional.get();
-            CanBo canBoId = canBoOptional.get();
-            Tuan id_tuan = tuanOptional.get();
-            DanhGia danhGia = new DanhGia(
-                    danhGiaDto.getNoiDungDG(),
-                    id_tuan,
-                    sinhVienId,
-                    canBoId
-            );
-            return danhGiaRepository.save(danhGia);
-        }else {
+//    public DanhGia createDangKy(DanhGiaDto danhGiaDto, Integer sinhVien, Integer canBo,Integer tuan) {
+//        Optional<Tuan> tuanOptional = tuanRepository.findById(tuan);
+//        Optional<SinhVien> sinhVienOptional = sinhVienRepository.findById(sinhVien);
+//        Optional<CanBo> canBoOptional = canBoRepository.findById(canBo);
+//        if(sinhVienOptional.isPresent() || tuanOptional.isPresent() || canBoOptional.isPresent()){
+//            SinhVien sinhVienId = sinhVienOptional.get();
+//            CanBo canBoId = canBoOptional.get();
+//            Tuan id_tuan = tuanOptional.get();
+//            DanhGia danhGia = new DanhGia(
+//                    danhGiaDto.getNoiDungDG(),
+//                    id_tuan,
+//                    sinhVienId,
+//                    canBoId
+//            );
+//            return danhGiaRepository.save(danhGia);
+//        }else {
+//            return null;
+//        }
+//    }
+    public DanhGia createDangKy(DanhGiaDto danhGiaDto, Integer tuan, Integer sinhVienId, Integer canBoId) {
+        SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        CanBo canBo = canBoRepository.findById(canBoId).orElse(null);
+        Tuan id_tuan = tuanRepository.findById(tuan).orElse(null);
+        if (sinhVien == null || canBo == null || id_tuan == null) {
             return null;
         }
+        DanhGia danhGia = new DanhGia(
+                    danhGiaDto.getNoiDungDG(),
+                    id_tuan,
+                    sinhVien,
+                    canBo
+            );
+        DanhGia savedanhGia = danhGiaRepository.save(danhGia);
+        return danhGiaRepository.save(savedanhGia);
     }
-
 
     public DanhGia updateDanhGia(Integer danhGiaId, DanhGiaDto danhGiaDto) {
         DanhGia existingDanhgia = getDanhGiaById(danhGiaId);

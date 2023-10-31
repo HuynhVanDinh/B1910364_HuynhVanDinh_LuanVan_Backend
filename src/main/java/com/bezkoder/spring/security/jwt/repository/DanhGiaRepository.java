@@ -11,4 +11,6 @@ public interface DanhGiaRepository extends JpaRepository<DanhGia, Integer> {
     List<DanhGia> findByTuan(Tuan tuan);
     List<DanhGia> findBySinhVien(SinhVien sinhVien);
     List<DanhGia> findByCanBoHuongDan(CanBo canBo);
+
+    List<DanhGia> findBySinhVienAndCanBoHuongDanAndTuan(SinhVien sinhVien,CanBo canBo, Tuan tuan);
 }

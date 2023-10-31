@@ -25,6 +25,9 @@ public class Lop {
     @JoinColumn(name = "khoa_id", referencedColumnName = "khoa_id")
     private Khoa khoa;
 
+    @ManyToOne
+    @JoinColumn(name = "maGV", referencedColumnName = "maGV")
+    private GiangVien giangVien;
     public Lop() {
     }
 

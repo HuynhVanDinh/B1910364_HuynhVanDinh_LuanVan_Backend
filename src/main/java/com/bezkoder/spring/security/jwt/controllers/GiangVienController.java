@@ -30,7 +30,15 @@ public class GiangVienController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @GetMapping("/khoa/{khoaId}")
+    public ResponseEntity<List<GiangVien>> getGiangVienByKhoa(@PathVariable Integer khoaId) {
+       List<GiangVien>  giangVien = giangVienService.getGiangVienByKhoa(khoaId);
+        if (giangVien != null) {
+            return new ResponseEntity<>(giangVien, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PostMapping
     public ResponseEntity<GiangVien> createGiangVien(@RequestBody GiangVienDto giangVienDto, @RequestParam Integer khoaId,
                                                      @RequestParam String username, @RequestParam String password, @RequestParam String email) {

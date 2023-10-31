@@ -1,5 +1,6 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
+import com.bezkoder.spring.security.jwt.entity.CongViec;
 import com.bezkoder.spring.security.jwt.entity.DanhGia;
 import com.bezkoder.spring.security.jwt.payload.request.DanhGiaDto;
 import com.bezkoder.spring.security.jwt.services.DanhGiaService;
@@ -10,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/danhgia")
 public class DanhGiaController {
@@ -49,6 +50,15 @@ public class DanhGiaController {
             return new ResponseEntity<>(danhGia, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/{sinhvienId}/{canboId}/{id_tuan}")
+    public ResponseEntity<List<DanhGia>> getDanhgiaBySinhVienAndCanBoAndTuan(@PathVariable Integer sinhvienId, @PathVariable Integer canboId, @PathVariable Integer id_tuan) {
+        List<DanhGia> danhGia = danhGiaService.getDanhGiaBySinhVienAndCanBoAndTuan(sinhvienId,canboId,id_tuan);
+        if (danhGia != null) {
+            return ResponseEntity.ok(danhGia);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
     @PreAuthorize("hasRole('CADRE')")

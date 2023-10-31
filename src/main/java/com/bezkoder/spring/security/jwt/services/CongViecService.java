@@ -40,6 +40,11 @@ public class CongViecService {
         Tuan tuan = tuanRepository.findById(id_tuan).orElse(null);
         return congViecRepository.findCongViecBySinhVienAndCanBoAndTuan(sinhvien,canbo,tuan);
     }
+    public List<CongViec> getCongViecBySinhVienAndTuan(Integer sinhVienId, Integer id_tuan){
+        SinhVien sinhvien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        Tuan tuan = tuanRepository.findById(id_tuan).orElse(null);
+        return congViecRepository.findCongViecBySinhVienAndTuan(sinhvien,tuan);
+    }
 
     public CongViec createCongViec(CongViecDto congViecDto,Integer tuan, Integer sinhVienId, Integer canBoId) {
         SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
@@ -80,6 +85,38 @@ public class CongViecService {
         return null;
     }
 
+    public CongViec updateTienDoCongViec(Integer congViecId, CongViecDto congViecDto, Integer sinhVienId) {
+        CongViec existingCongViec = getCongViecById(congViecId);
+        SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        if (sinhVien == null) {
+            return null;
+        }
+        if (existingCongViec != null) {
+//            existingCongViec.setMota(congViecDto.getMota());
+            existingCongViec.setTienDo(congViecDto.getTienDo());
+            existingCongViec.setTrangThaiCV(1);
+//
+//            existingCongViec.setSinhVien(sinhVien);
+//            existingCongViec.setCanBo(canBo);
+
+            return congViecRepository.save(existingCongViec);
+        }
+        return null;
+    }
+    public CongViec duyetCongViec(Integer congViecId, CongViecDto congViecDto) {
+        CongViec existingCongViec = getCongViecById(congViecId);
+
+        if (existingCongViec != null) {
+            if(congViecDto.getTienDo() == 100){
+                existingCongViec.setTrangThaiCV(2);
+                return congViecRepository.save(existingCongViec);
+            } else {
+                existingCongViec.setTrangThaiCV(3);
+                return congViecRepository.save(existingCongViec);
+            }
+        }
+        return null;
+    }
     public void deleteCongViec(Integer congViecId) {
         CongViec existingCongViec = getCongViecById(congViecId);
         if (existingCongViec != null) {

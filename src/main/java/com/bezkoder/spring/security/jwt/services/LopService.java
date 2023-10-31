@@ -1,8 +1,10 @@
 package com.bezkoder.spring.security.jwt.services;
 
+import com.bezkoder.spring.security.jwt.entity.GiangVien;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
 import com.bezkoder.spring.security.jwt.entity.Lop;
 import com.bezkoder.spring.security.jwt.payload.request.LopDto;
+import com.bezkoder.spring.security.jwt.repository.GiangVienRepository;
 import com.bezkoder.spring.security.jwt.repository.KhoaRepository;
 import com.bezkoder.spring.security.jwt.repository.LopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,8 @@ import java.util.Optional;
 public class LopService {
     @Autowired
     private LopRepository lopRepository;
-
+    @Autowired
+    private GiangVienRepository giangVienRepository;
     public List<Lop> getAllLop() {
         return lopRepository.findAll();
     }
@@ -63,7 +66,19 @@ public class LopService {
             return null;
         }
     }
-
+    @Transactional
+    public Lop updateLopGiangVien(Integer lopId, Integer maGV) {
+        Optional<Lop> existingLopOptional = lopRepository.findById(lopId);
+        Optional<GiangVien> giangVienOptional = giangVienRepository.findById(maGV);
+        if (existingLopOptional.isPresent() &&  giangVienOptional.isPresent()) {
+            Lop existingLop = existingLopOptional.get();
+            GiangVien giangVien =  giangVienOptional.get();
+            existingLop.setGiangVien(giangVien);
+            return lopRepository.save(existingLop);
+        } else {
+            return null;
+        }
+    }
 
     @Transactional
     public void deleteLop(Integer id) {
@@ -72,7 +87,6 @@ public class LopService {
 
     @Transactional
     public List<Lop> searchLopByName(String tenLop) {
-        // Gọi phương thức tìm kiếm trong repository
         return lopRepository.findByTenLopContainingIgnoreCase(tenLop);
     }
 }

@@ -107,7 +107,11 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/ketquathuctap/**").permitAll()
 			.antMatchers("/api/thoigiandangky/**").permitAll()
 			.antMatchers("/api/tuan/**").permitAll()
-        .anyRequest().authenticated();
+			.antMatchers("/api/phieudiemcanbo/**").permitAll()
+			.antMatchers("/api/phieudiemgiangvien/**").permitAll()
+			.antMatchers("/api/mucdanhgiacuacanbo/**").permitAll()
+			.antMatchers("/api/danhgia/**").permitAll()
+			.anyRequest().authenticated();
     
     http.authenticationProvider(authenticationProvider());
 

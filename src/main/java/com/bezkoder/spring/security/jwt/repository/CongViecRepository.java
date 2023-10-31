@@ -13,4 +13,5 @@ import java.util.List;
 public interface CongViecRepository extends JpaRepository<CongViec, Integer> {
 
     List<CongViec> findCongViecBySinhVienAndCanBoAndTuan(SinhVien sinhVien, CanBo canBo, Tuan tuan);
+    List<CongViec> findCongViecBySinhVienAndTuan(SinhVien sinhVien, Tuan tuan);
 }

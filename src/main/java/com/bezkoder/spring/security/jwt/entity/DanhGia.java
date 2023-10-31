@@ -18,7 +18,7 @@ public class DanhGia {
     private Integer maDG;
     @Column(name = "noidungDG")
     private  String noidungDG;
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tuan", referencedColumnName = "id_tuan")
     private Tuan tuan;
     @ManyToOne

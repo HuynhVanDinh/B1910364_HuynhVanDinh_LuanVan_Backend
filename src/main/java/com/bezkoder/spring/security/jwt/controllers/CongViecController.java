@@ -48,6 +48,15 @@ public class CongViecController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/{sinhvienId}/{id_tuan}")
+    public ResponseEntity<List<CongViec>> getCongViecBySinhVienAndTuan(@PathVariable Integer sinhvienId, @PathVariable Integer id_tuan) {
+        List<CongViec> congViec = congViecService.getCongViecBySinhVienAndTuan(sinhvienId,id_tuan);
+        if (congViec != null) {
+            return ResponseEntity.ok(congViec);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
     @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<MessageResponse> createCongViec(@Valid @RequestBody CongViecDto congViecDto,
@@ -73,6 +82,34 @@ public class CongViecController {
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy Sinh viên hoặc Cán bộ với ID tương ứng."));
         }
+    }
+    @PreAuthorize("hasRole('CADRE')")
+    @PutMapping("/duyet/{congViecId}")
+    public ResponseEntity<MessageResponse> duyetCongViec(@PathVariable Integer congViecId,
+                                                          @Valid @RequestBody CongViecDto congViecDto) {
+        CongViec updatedCongViec = congViecService.duyetCongViec(congViecId, congViecDto);
+        if (updatedCongViec != null) {
+            return ResponseEntity.ok(new MessageResponse("Duyêt công việc thành công!"));
+        } else {
+            return ResponseEntity.badRequest().body(new MessageResponse("Duyệt không thành công."));
+        }
+    }
+    @PreAuthorize("hasRole('STUDENT')")
+    @PutMapping("/capnhattiendo/{congViecId}")
+    public ResponseEntity<MessageResponse> updateTienDoCongViec(@PathVariable Integer congViecId,
+                                                          @Valid @RequestBody CongViecDto congViecDto,
+                                                          @RequestParam Integer sinhVienId
+                                                          ) {
+        CongViec tienDoCongViec = congViecService.getCongViecById(congViecId);
+        if(congViecDto.getTienDo() > tienDoCongViec.getTienDo() ){
+            CongViec updatedCongViec = congViecService.updateTienDoCongViec(congViecId, congViecDto, sinhVienId);
+            if (updatedCongViec != null) {
+                return ResponseEntity.ok(new MessageResponse("Cập nhật tiến độ công việc thành công!"));
+            } else {
+                return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy Sinh viên hoặc Cán bộ với ID tương ứng."));
+            }
+        }
+        return ResponseEntity.badRequest().body(new MessageResponse("Tiến độ phải lớn hơn tiến độ trước"));
     }
     @PreAuthorize("hasRole('CADRE')")
     @DeleteMapping("/{congViecId}")

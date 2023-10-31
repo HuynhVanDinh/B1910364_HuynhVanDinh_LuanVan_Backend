@@ -68,7 +68,18 @@ public class LopController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/phanconggiangvien/{lopId}")
+    public ResponseEntity<MessageResponse> updateLopGiangVien(
+            @PathVariable Integer lopId,
+            @RequestParam Integer maGV) {
+        Lop updatedLop = lopService.updateLopGiangVien(lopId, maGV);
+        if (updatedLop != null) {
+            return ResponseEntity.ok(new MessageResponse("Phân công giảng viên thành công!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
