@@ -1,10 +1,13 @@
 package com.bezkoder.spring.security.jwt.controllers;
 import com.bezkoder.spring.security.jwt.entity.GiangVien;
+import com.bezkoder.spring.security.jwt.entity.SinhVien;
 import com.bezkoder.spring.security.jwt.payload.request.GiangVienDto;
+import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.GiangVienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +27,15 @@ public class GiangVienController {
     @GetMapping("/{id}")
     public ResponseEntity<GiangVien> getGiangVienById(@PathVariable Integer id) {
         GiangVien giangVien = giangVienService.getGiangVienById(id);
+        if (giangVien != null) {
+            return new ResponseEntity<>(giangVien, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @GetMapping("/account/{accountid}")
+    public ResponseEntity<GiangVien> getGiangVienByAccount(@PathVariable Integer accountid) {
+        GiangVien giangVien = giangVienService.getGiangVienByAccountId(accountid);
         if (giangVien != null) {
             return new ResponseEntity<>(giangVien, HttpStatus.OK);
         } else {
@@ -59,7 +71,19 @@ public class GiangVienController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @PreAuthorize("hasRole('LECTURER')")
+    @PutMapping("/{giangvienId}/capnhatanhdien")
+    public ResponseEntity<MessageResponse> updateAvt(@PathVariable Integer giangvienId,
+                                                     @RequestBody String hinhAnh
 
+    ) {
+        GiangVien updatedAvt = giangVienService.updateAvt(giangvienId,hinhAnh);
+        if (updatedAvt != null) {
+            return ResponseEntity.ok(new MessageResponse("Cập nhật ảnh diện thành công!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @DeleteMapping("/{giangVienId}")
     public ResponseEntity<Void> deleteGiangVien(@PathVariable Integer giangVienId) {
         giangVienService.deleteGiangVien(giangVienId);

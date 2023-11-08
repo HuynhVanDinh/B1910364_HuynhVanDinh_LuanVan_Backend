@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface KetQuaThucTapRepository extends JpaRepository<KetQuaThucTap, Integer> {
     List<KetQuaThucTap> findByDonViThucTap(DonViThucTap madvtt);
     List<KetQuaThucTap> findByDonViThucTapAndCanBoHuongDanIsNull(DonViThucTap madvtt);
-    List<KetQuaThucTap> findByGiangVien(Integer magv);
+    List<KetQuaThucTap> findByGiangVien(GiangVien magv);
     List<KetQuaThucTap> findByCanBoHuongDan(CanBo macb);
     List<KetQuaThucTap> findByDotThucTap(Integer madot);
     Optional<KetQuaThucTap> findBySinhVien(SinhVien masv);

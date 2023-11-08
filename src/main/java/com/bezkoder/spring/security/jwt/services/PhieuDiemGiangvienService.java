@@ -1,9 +1,10 @@
 package com.bezkoder.spring.security.jwt.services;
 
-import com.bezkoder.spring.security.jwt.entity.Khoa;
-import com.bezkoder.spring.security.jwt.entity.PhieuDiemGiangvien;
+import com.bezkoder.spring.security.jwt.entity.*;
 import com.bezkoder.spring.security.jwt.payload.request.PhieuDiemGiangvienDto;
 import com.bezkoder.spring.security.jwt.repository.KhoaRepository;
+import com.bezkoder.spring.security.jwt.repository.MucDanhGiaCuaCanBoRepository;
+import com.bezkoder.spring.security.jwt.repository.MucDanhGiaCuaGiangVienRepository;
 import com.bezkoder.spring.security.jwt.repository.PhieuDiemGiangVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ public class PhieuDiemGiangvienService {
     private final PhieuDiemGiangVienRepository phieuDiemGiangVienRepository;
     @Autowired
     private KhoaRepository khoaRepository;
+    @Autowired
+    private MucDanhGiaCuaGiangVienRepository mucDanhGiaCuaGiangVienRepository;
     @Autowired
     public PhieuDiemGiangvienService(PhieuDiemGiangVienRepository phieuDiemGiangvienRepository) {
         this.phieuDiemGiangVienRepository = phieuDiemGiangvienRepository;
@@ -28,16 +31,24 @@ public class PhieuDiemGiangvienService {
     }
     public List<PhieuDiemGiangvien> getPhieuDiemGiangvienByKhoa(Integer khoaId) {
         Khoa khoa = khoaRepository.findById(khoaId).orElse(null);
-        return phieuDiemGiangVienRepository.findByKhoa(khoa);
+        return phieuDiemGiangVienRepository.findPhieuDiemGiangvienByKhoa(khoa);
     }
-    public PhieuDiemGiangvien createPhieuDiemGiangvien(PhieuDiemGiangvienDto phieuDiemGiangvienDto, Integer khoaId) {
+    public List<PhieuDiemGiangvien> getPhieuDiemGiangVienByMuc(Integer muc_id) {
+        MucDanhGiaCuaGiangVien mucId = mucDanhGiaCuaGiangVienRepository.findById(muc_id).orElse(null);
+        return phieuDiemGiangVienRepository.findByMucDG(mucId);
+    }
+    public PhieuDiemGiangvien createPhieuDiemGiangvien(PhieuDiemGiangvienDto phieuDiemGiangvienDto, Integer khoaId, Integer muc_id) {
         Khoa khoa = khoaRepository.findById(khoaId).orElse(null);
-        if (khoa == null) {
+        MucDanhGiaCuaGiangVien mucID = mucDanhGiaCuaGiangVienRepository.findById(muc_id).orElse(null);
+        if (khoa == null || mucID == null) {
             return null;
 
         } else {
             PhieuDiemGiangvien phieuDiemGiangvien = new PhieuDiemGiangvien(
-                    phieuDiemGiangvienDto.getNoiDungPDGV()
+                    phieuDiemGiangvienDto.getNoiDungPDGV(),
+                    phieuDiemGiangvienDto.getDiemMax(),
+                    khoa,
+                    mucID
             );
             return phieuDiemGiangVienRepository.save(phieuDiemGiangvien);
         }
@@ -45,10 +56,13 @@ public class PhieuDiemGiangvienService {
 
     }
 
-    public PhieuDiemGiangvien updatePhieuDiemGiangvien(Integer phieuDiemGiangvienId, PhieuDiemGiangvienDto phieuDiemGiangvienDto) {
+    public PhieuDiemGiangvien updatePhieuDiemGiangvien(Integer phieuDiemGiangvienId, PhieuDiemGiangvienDto phieuDiemGiangvienDto, Integer muc_id) {
         PhieuDiemGiangvien existingPhieuDiemGiangvien = getPhieuDiemGiangvienById(phieuDiemGiangvienId);
+        MucDanhGiaCuaGiangVien mucID = mucDanhGiaCuaGiangVienRepository.findById(muc_id).orElse(null);
         if (existingPhieuDiemGiangvien != null) {
             existingPhieuDiemGiangvien.setNoiDungPDGV(phieuDiemGiangvienDto.getNoiDungPDGV());
+            existingPhieuDiemGiangvien.setDiemMax(phieuDiemGiangvienDto.getDiemMax());
+            existingPhieuDiemGiangvien.setMucDG(mucID);
             return phieuDiemGiangVienRepository.save(existingPhieuDiemGiangvien);
         }
         return null;

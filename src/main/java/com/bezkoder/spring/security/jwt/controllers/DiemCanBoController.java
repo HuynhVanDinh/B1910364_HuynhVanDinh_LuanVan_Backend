@@ -6,10 +6,11 @@ import com.bezkoder.spring.security.jwt.services.DiemCanBoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/diemcanbo")
 public class DiemCanBoController {
@@ -17,7 +18,7 @@ public class DiemCanBoController {
     @Autowired
     private DiemCanBoService diemCanBoService;
 
-    @GetMapping("/all")
+    @GetMapping
     public ResponseEntity<List<DiemCanBo>> getAllDiemCanBo() {
         List<DiemCanBo> diemCanBoList = diemCanBoService.getAllDiem();
         return new ResponseEntity<>(diemCanBoList, HttpStatus.OK);
@@ -39,6 +40,12 @@ public class DiemCanBoController {
         return new ResponseEntity<>(diemCanBoList, HttpStatus.OK);
     }
 
+    @GetMapping("/sinhvien/{maSV}")
+    public ResponseEntity<List<DiemCanBo>> getDiemCanBoBySinhVien(@PathVariable Integer maSV) {
+        List<DiemCanBo> diemCanBoList = diemCanBoService.getAllDiemSinhvien(maSV);
+        return new ResponseEntity<>(diemCanBoList, HttpStatus.OK);
+    }
+    @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<DiemCanBo> createDiemCanBo(@RequestBody DiemCanBoDto diemCanBoDto, @RequestParam Integer maPhieu, @RequestParam Integer maSV, @RequestParam Integer maCB) {
         DiemCanBo createdDiemCanBo = diemCanBoService.createDiemCanBo(diemCanBoDto, maPhieu, maSV, maCB );
@@ -48,7 +55,7 @@ public class DiemCanBoController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    @PreAuthorize("hasRole('CADRE')")
     @PutMapping("/{id}")
     public ResponseEntity<DiemCanBo> updateDiemCanBo(@PathVariable Integer id, @RequestBody DiemCanBoDto diemCanBoDto) {
         DiemCanBo updatedDiemCanBo = diemCanBoService.updateDiemCanBo(id, diemCanBoDto);
@@ -58,7 +65,7 @@ public class DiemCanBoController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @PreAuthorize("hasRole('CADRE')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiemCanBo(@PathVariable Integer id) {
         diemCanBoService.deleteDiemCanBo(id);

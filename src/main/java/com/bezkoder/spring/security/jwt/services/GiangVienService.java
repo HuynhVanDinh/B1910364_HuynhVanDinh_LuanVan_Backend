@@ -79,6 +79,12 @@ public class GiangVienService {
         return giangVienRepository.save(existingGiangVien);
     }
     @Transactional
+    public GiangVien updateAvt(Integer giangvienId, String hinhAnh) {
+        GiangVien existingGiangVien = getGiangVienById(giangvienId);
+        existingGiangVien.setAnhGV(hinhAnh);
+        return giangVienRepository.save(existingGiangVien);
+    }
+    @Transactional
     public void deleteGiangVien(Integer giangVienId) {
         GiangVien existingGiangVien = getGiangVienById(giangVienId);
 

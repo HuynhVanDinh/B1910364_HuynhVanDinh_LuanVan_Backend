@@ -18,11 +18,18 @@ public class PhieuDiemGiangvien {
     private Integer maPDGV;
     @Column(name = "noiDungPD")
     private String noiDungPDGV;
+    @Column(name = "diemtoida")
+    private Float diemMax;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "khoaId")
     private Khoa khoa;
-
-    public PhieuDiemGiangvien(String noiDungPD){
+    @ManyToOne
+    @JoinColumn(name = "muc_id", referencedColumnName = "muc_id")
+    private MucDanhGiaCuaGiangVien mucDG;
+    public PhieuDiemGiangvien(String noiDungPDGV, Float diemMax,Khoa khoa, MucDanhGiaCuaGiangVien mucDG){
         this.noiDungPDGV = noiDungPDGV;
+        this.diemMax = diemMax;
+        this.khoa = khoa;
+        this.mucDG = mucDG;
     }
 }

@@ -50,7 +50,7 @@ public class KetQuaThucTapService {
     }
 
     public List<KetQuaThucTap> getKetQuaThucTapByMaGv(Integer magv){
-        return ketQuaThucTapRepository.findByGiangVien(magv);
+        return ketQuaThucTapRepository.findByGiangVien(giangVienRepository.findById(magv).orElse(null));
     }
     public List<KetQuaThucTap> getKetQuaThucTapByMaCb(Integer macb){
         CanBo canBohuongdan = canBoRepository.findById(macb).orElse(null);

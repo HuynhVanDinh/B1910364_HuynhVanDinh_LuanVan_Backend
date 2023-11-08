@@ -20,6 +20,8 @@ public class DiemCanBoService {
     @Autowired
     private PhieuDiemCanboRepository phieuDiemCanBoRepository;
     @Autowired
+    private KetQuaThucTapRepository ketQuaThucTapRepository;
+    @Autowired
     public DiemCanBoService(DiemCanBoRepository diemCanBoRepository){
         this.diemCanBoRepository = diemCanBoRepository;
     }
@@ -40,8 +42,10 @@ public class DiemCanBoService {
         Optional<PhieuDiemCanbo> phieuDiemCanBoOptional = phieuDiemCanBoRepository.findById(phieuDiemCB);
         Optional<SinhVien> sinhVienOptional = sinhVienRepository.findById(sinhVien);
         Optional<CanBo> canBoOptional = canBoRepository.findById(canBo);
+
         if(sinhVienOptional.isPresent() || phieuDiemCanBoOptional.isPresent() || canBoOptional.isPresent()){
             SinhVien sinhVienId = sinhVienOptional.get();
+            Optional<KetQuaThucTap> ketQuaThucTapOptional = ketQuaThucTapRepository.findBySinhVien(sinhVienId);
             CanBo maCB = canBoOptional.get();
             PhieuDiemCanbo maPhieu = phieuDiemCanBoOptional.get();
             DiemCanBo diemCanBo = new DiemCanBo(
@@ -50,6 +54,7 @@ public class DiemCanBoService {
                     maCB,
                     maPhieu
             );
+            ketQuaThucTapOptional.get().setTrangThai(1);
             return diemCanBoRepository.save(diemCanBo);
         }else {
             return null;

@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class PhieuDiemGiangvienDto {
     private String noiDungPDGV;
+    private Float diemMax;
 }
