@@ -48,7 +48,7 @@ public class DangKyController {
                 if(baiDang.getSoLuong()==0){
                     return ResponseEntity.badRequest().body(new MessageResponse("Xin lỗi...Số lượng không đủ"));
                 }
-                return ResponseEntity.badRequest().body(new MessageResponse("Đăng ký không thành công. Sinh viên đã đăng ký bài đăng này trước đó."));
+                return ResponseEntity.badRequest().body(new MessageResponse("Đăng ký không thành công. Sinh viên chỉ đăng kí tôi đa 3 bài"));
             }
         } else {
             return ResponseEntity.badRequest().body(new MessageResponse("Không tìm thấy bài đăng hoặc sinh viên tương ứng."));

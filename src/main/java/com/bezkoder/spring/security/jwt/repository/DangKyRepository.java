@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface DangKyRepository extends JpaRepository<DangKy, Integer> {
     long countBySinhVienAndBaiDang(SinhVien sinhVien, BaiDang baiDang);
+    long countBySinhVien(SinhVien sinhVien);
     boolean existsBySinhVienAndBaiDang(SinhVien maSV, BaiDang baiDangId);
 
     List<DangKy> findBySinhVien(SinhVien sinhVienId);

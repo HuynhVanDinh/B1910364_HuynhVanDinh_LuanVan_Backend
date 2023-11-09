@@ -54,8 +54,11 @@ public class DangKyService {
             if (baiDang == null || sinhVien == null) {
                 return null;
             }
-
-            long existingDangKyCount = dangKyRepository.countBySinhVienAndBaiDang(sinhVien, baiDang);
+            long existingDangKyCount = dangKyRepository.countBySinhVien(sinhVien);
+            if (existingDangKyCount >= 3) {
+                return null;
+            }
+             existingDangKyCount = dangKyRepository.countBySinhVienAndBaiDang(sinhVien, baiDang);
             if (existingDangKyCount > 0) {
                 return null;
             }

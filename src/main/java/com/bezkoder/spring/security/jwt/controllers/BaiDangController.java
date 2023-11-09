@@ -38,12 +38,20 @@ public class BaiDangController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/donvi/{maDvtt}")
+    public ResponseEntity<BaiDang> getBaiDangByDonViThucTap(@PathVariable Integer maDvtt) {
+        BaiDang baiDang = baiDangService.getBaiDangByDonViThucTap(maDvtt);
+        if (baiDang != null) {
+            return ResponseEntity.ok(baiDang);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
     @PreAuthorize("hasRole('UNIT')")
     @PostMapping
     public ResponseEntity<MessageResponse> createBaiDang(@Valid @RequestBody BaiDangDto baiDangDto,
                                                          @RequestParam Integer donViThucTapId) {
-//        DonViThucTap donViThucTap = new DonViThucTap();
 
         BaiDang createdBaiDang = baiDangService.createBaiDang(baiDangDto, donViThucTapId);
         if (createdBaiDang != null) {
