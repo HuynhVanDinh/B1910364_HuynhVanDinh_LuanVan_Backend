@@ -26,7 +26,10 @@ public class DonViThucTapController {
     public List<DonViThucTap> getAllDonViThucTap() {
         return donViThucTapService.getAllDonViThucTap();
     }
-
+    @GetMapping("/coquan-khoa")
+    public List<DonViThucTap> getAllDonViThucTapByKhoa() {
+        return donViThucTapService.getDonViThucTapByIsKhoa(1);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<DonViThucTap> getDonViThucTapById(@PathVariable Integer id) {
         DonViThucTap donViThucTap = donViThucTapService.getDonViThucTapById(id);

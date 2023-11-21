@@ -1,6 +1,7 @@
 package com.bezkoder.spring.security.jwt.controllers;
 
 import com.bezkoder.spring.security.jwt.entity.MucDanhGiaCuaCanBo;
+import com.bezkoder.spring.security.jwt.entity.MucDanhGiaCuaGiangVien;
 import com.bezkoder.spring.security.jwt.entity.PhieuDiemCanbo;
 import com.bezkoder.spring.security.jwt.payload.request.MucDanhGiaCuaCanBoDto;
 import com.bezkoder.spring.security.jwt.payload.request.PhieuDiemCanboDto;

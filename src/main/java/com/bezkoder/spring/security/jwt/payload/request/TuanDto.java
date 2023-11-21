@@ -9,4 +9,6 @@ public class TuanDto {
 //    private String ten_tuan;
     private LocalDate batdau;
     private LocalDate hethan;
+    private Integer so_buoi;
+    private  Integer is_complete;
 }

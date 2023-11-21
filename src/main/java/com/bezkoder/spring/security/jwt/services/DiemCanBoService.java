@@ -32,8 +32,14 @@ public class DiemCanBoService {
         CanBo canBo = canBoRepository.findById(maCB).orElse(null);
         return diemCanBoRepository.findDiemCanBoByCanBo(canBo);
     }
+    public DiemCanBo getDiemByPhieuDiem(Integer maPhieu, Integer sinhVienId) {
+        PhieuDiemCanbo phieuDiemCanbo = phieuDiemCanBoRepository.findById(maPhieu).orElse(null);
+       SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        return diemCanBoRepository.findDiemCanBoByPhieuDiemCanboAndSinhVien(phieuDiemCanbo, sinhVien);
+    }
     public List<DiemCanBo> getAllDiemSinhvien(Integer sinhVienId) {
-        return diemCanBoRepository.findDiemCanBoBySinhVien( sinhVienRepository.findById(sinhVienId).orElse(null));
+        SinhVien sinhVien = sinhVienRepository.findById(sinhVienId).orElse(null);
+        return diemCanBoRepository.findDiemCanBoBySinhVien(sinhVien);
     }
     public DiemCanBo getDiemCanBoById(Integer id) {
         return diemCanBoRepository.findById(id).orElse(null);

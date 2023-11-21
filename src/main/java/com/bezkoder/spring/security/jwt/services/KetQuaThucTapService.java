@@ -29,6 +29,8 @@ public class KetQuaThucTapService {
     private CanBoRepository canBoRepository;
     @Autowired
     private  DangKyRepository dangKyRepository;
+    @Autowired
+    private TuanRepository tuanRepository;
     public List<KetQuaThucTap> getAllKetQuaThucTap() {
         return ketQuaThucTapRepository.findAll();
     }
@@ -38,6 +40,11 @@ public class KetQuaThucTapService {
     public List<KetQuaThucTap> getKetQuaThucTapByMaDvtt(Integer madvtt){
        DonViThucTap donViThucTap = donViThucTapRepository.findById(madvtt).orElse(null);
         return ketQuaThucTapRepository.findByDonViThucTap(donViThucTap);
+    }
+    public List<KetQuaThucTap> getKetQuaThucTapByDot(Integer dot){
+        DotThucTap dotThucTap = dotThucTapRepository.findById(dot).orElse(null);
+//        DonViThucTap donViThucTap = donViThucTapRepository.findById(madvtt).orElse(null);
+        return ketQuaThucTapRepository.findByDotThucTap(dotThucTap);
     }
     public List<KetQuaThucTap> getKetQuaThucTapChuaPhanCong(Integer madvtt) {
         DonViThucTap donViThucTap = donViThucTapRepository.findById(madvtt).orElse(null);
@@ -52,18 +59,21 @@ public class KetQuaThucTapService {
     public List<KetQuaThucTap> getKetQuaThucTapByMaGv(Integer magv){
         return ketQuaThucTapRepository.findByGiangVien(giangVienRepository.findById(magv).orElse(null));
     }
-    public List<KetQuaThucTap> getKetQuaThucTapByMaCb(Integer macb){
+    public List<KetQuaThucTap> getKetQuaThucTapByMaCb(Integer macb, Integer trangThai){
+        CanBo canBohuongdan = canBoRepository.findById(macb).orElse(null);
+        return ketQuaThucTapRepository.findByCanBoHuongDanAndTrangThai(canBohuongdan,trangThai);
+    }
+
+    public List<KetQuaThucTap> getAllKetQuaThucTapByMaCb(Integer macb){
         CanBo canBohuongdan = canBoRepository.findById(macb).orElse(null);
         return ketQuaThucTapRepository.findByCanBoHuongDan(canBohuongdan);
-    }
-    public List<KetQuaThucTap> getKetQuaThucTapByDotThucTap(Integer madot){
-        return ketQuaThucTapRepository.findByDotThucTap(madot);
     }
 
     public KetQuaThucTap getKetQuaTHucTapByMaSv(Integer masv){
         SinhVien sinhVien = sinhVienRepository.findById(masv).orElse(null);
         return ketQuaThucTapRepository.findBySinhVien(sinhVien).orElse(null);
     }
+
     @Transactional
     public KetQuaThucTap createKetQuaThucTap( Integer maSV, Integer maDvtt, Integer maGv, Integer maDot) {
         Optional<SinhVien> sinhVienOptional = sinhVienRepository.findById(maSV);
@@ -79,6 +89,37 @@ public class KetQuaThucTapService {
             DotThucTap dotThucTap = dotThucTapOptional.get();
             GiangVien giangVien = giangVienOptional.get();
             dangKy.setTrangThai(3);
+            KetQuaThucTap ketQuaThucTap = new KetQuaThucTap(
+                    sinhVien,
+                    donViThucTap,
+                    giangVien,
+                    dotThucTap
+            );
+            ketQuaThucTap.setCanBoHuongDan(null);
+            ketQuaThucTap.setTrangThai(0);
+            ketQuaThucTap.setDiem(null);
+            KetQuaThucTap saveKetQuaThucTap = ketQuaThucTapRepository.save(ketQuaThucTap);
+            return  saveKetQuaThucTap;
+        } else {
+            return null;
+        }
+    }
+
+    @Transactional
+    public KetQuaThucTap KhoaPhanKetQuaThucTap( Integer maSV, Integer maDvtt, Integer maGv, Integer maDot) {
+        Optional<SinhVien> sinhVienOptional = sinhVienRepository.findById(maSV);
+        SinhVien sinhVien1 = sinhVienRepository.findById(maSV).orElse(null);
+        Optional<DonViThucTap> donViThucTapOptional = donViThucTapRepository.findById(maDvtt);
+        Optional<GiangVien> giangVienOptional = giangVienRepository.findById(maGv);
+        Optional<DotThucTap> dotThucTapOptional = dotThucTapRepository.findById(maDot);
+
+        if ( sinhVienOptional.isPresent() || donViThucTapOptional.isPresent() || giangVienOptional.isPresent() || dotThucTapOptional.isPresent()) {
+
+            SinhVien sinhVien = sinhVienOptional.get();
+            DonViThucTap donViThucTap = donViThucTapOptional.get();
+            DotThucTap dotThucTap = dotThucTapOptional.get();
+            GiangVien giangVien = giangVienOptional.get();
+
             KetQuaThucTap ketQuaThucTap = new KetQuaThucTap(
                     sinhVien,
                     donViThucTap,
@@ -123,6 +164,22 @@ public class KetQuaThucTapService {
             return null;
         }
         existingKetQuaThucTap.setDiem(ketQuaThucTapDto.getDiem());
+        return ketQuaThucTapRepository.save(existingKetQuaThucTap);
+    }
+    @Transactional
+    public KetQuaThucTap updateTrangThai(KetQuaThucTapDto ketQuaThucTapDto) {
+        KetQuaThucTap existingKetQuaThucTap = getKetQuaThucTapById(ketQuaThucTapDto.getMaKqtt());
+
+        if (existingKetQuaThucTap == null ) {
+            return null;
+        }
+        existingKetQuaThucTap.setTrangThai(ketQuaThucTapDto.getTrangThai());
+        CanBo canBo = canBoRepository.findById(ketQuaThucTapDto.getCanbo()).orElse(null);
+       List<Tuan>  existingTuan = tuanRepository.findByCanboAndIsComplete(canBo,0);
+        for (Tuan tuan : existingTuan) {
+            tuan.setIsComplete(1);
+        }
+        tuanRepository.saveAll(existingTuan);
         return ketQuaThucTapRepository.save(existingKetQuaThucTap);
     }
     @Transactional

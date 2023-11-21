@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("/api/diemgiangvien")
 public class DiemGiangVienController {
 
     @Autowired
     private DiemGiangVienService diemGiangVienService;
 
-    @GetMapping("/all")
+    @GetMapping()
     public ResponseEntity<List<DiemGiangVien>> getAllDiemGiangVien() {
         List<DiemGiangVien> diemGiangVienList = diemGiangVienService.getAllDiem();
         return new ResponseEntity<>(diemGiangVienList, HttpStatus.OK);

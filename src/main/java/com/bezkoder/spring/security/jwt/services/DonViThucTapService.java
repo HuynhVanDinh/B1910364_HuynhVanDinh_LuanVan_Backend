@@ -34,12 +34,17 @@ public class DonViThucTapService {
     public DonViThucTap getDonViThucTapById(Integer id) {
         return donViThucTapRepository.findById(id).orElse(null);
     }
+
+    public List<DonViThucTap> getDonViThucTapByIsKhoa(Integer trangthai) {
+        return donViThucTapRepository.findDonViThucTapByIsKhoa(trangthai);
+    }
     @Transactional
     public DonViThucTap createDonViThucTap(DonViThucTapDto donViThucTapDto, String email) {
         DonViThucTap donViThucTap = new DonViThucTap();
         donViThucTap.setTenDvtt(donViThucTapDto.getTenDvtt());
         donViThucTap.setDiaChi(donViThucTapDto.getDiaChi());
         donViThucTap.setSoDt(donViThucTapDto.getSoDt());
+        donViThucTap.setIsKhoa(donViThucTapDto.getIsKhoa());
 
         DonViThucTap savedDonViThucTap = donViThucTapRepository.save(donViThucTap);
 
@@ -67,6 +72,7 @@ public class DonViThucTapService {
             existingDonViThucTap.setTenDvtt(donViThucTapDto.getTenDvtt());
             existingDonViThucTap.setDiaChi(donViThucTapDto.getDiaChi());
             existingDonViThucTap.setSoDt(donViThucTapDto.getSoDt());
+            existingDonViThucTap.setIsKhoa(donViThucTapDto.getIsKhoa());
             // Cập nhật thông tin của Account
             Account account = existingDonViThucTap.getAccount();
             account.setEmail(email);

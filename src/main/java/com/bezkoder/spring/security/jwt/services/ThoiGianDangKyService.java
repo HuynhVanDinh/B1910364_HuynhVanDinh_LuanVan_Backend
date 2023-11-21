@@ -28,7 +28,7 @@ public class ThoiGianDangKyService {
     public ThoiGianDangKy getThoiGianDangKyById(Integer id) {
         return thoiGianDangKyRepository.findById(id).orElse(null);
     }
-    public List<ThoiGianDangKy> getThoiGianDangKyByKhoa(Khoa khoa) {
+    public ThoiGianDangKy getThoiGianDangKyByKhoa(Khoa khoa) {
         return thoiGianDangKyRepository.findByKhoa(khoa);
     }
 

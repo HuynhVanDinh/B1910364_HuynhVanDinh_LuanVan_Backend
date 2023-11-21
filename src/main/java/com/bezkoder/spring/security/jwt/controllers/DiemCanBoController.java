@@ -45,6 +45,12 @@ public class DiemCanBoController {
         List<DiemCanBo> diemCanBoList = diemCanBoService.getAllDiemSinhvien(maSV);
         return new ResponseEntity<>(diemCanBoList, HttpStatus.OK);
     }
+
+    @GetMapping("/muc/{muc_id}/{maSV}")
+    public ResponseEntity<DiemCanBo> getDiemCanBoByPhieuDiem(@PathVariable Integer muc_id, @PathVariable Integer maSV) {
+        DiemCanBo diemCanBoList = diemCanBoService.getDiemByPhieuDiem(muc_id, maSV);
+        return new ResponseEntity<>(diemCanBoList, HttpStatus.OK);
+    }
     @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<DiemCanBo> createDiemCanBo(@RequestBody DiemCanBoDto diemCanBoDto, @RequestParam Integer maPhieu, @RequestParam Integer maSV, @RequestParam Integer maCB) {

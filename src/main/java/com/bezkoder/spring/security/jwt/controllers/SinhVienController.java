@@ -45,6 +45,11 @@ public class SinhVienController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+    @GetMapping("/chuadangky")
+    public ResponseEntity<List<SinhVien>> getSinhVienChuaDangKy() {
+        List<SinhVien> sinhVienChuaDangKy = sinhVienService.getSinhVienChuaDangKy();
+        return ResponseEntity.ok(sinhVienChuaDangKy);
+    }
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     public ResponseEntity<List<SinhVien>> searchSinhVien(@RequestParam String tenSV) {
@@ -93,6 +98,11 @@ public class SinhVienController {
     @DeleteMapping("/{sinhvienId}")
     public ResponseEntity<Void> deleteSinhVien(@PathVariable Integer sinhvienId) {
         sinhVienService.deleteSinhVien(sinhvienId);
+        return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/guicanhbao")
+    public ResponseEntity<Void> guicanhbaodenSinhVien() {
+        sinhVienService.sendEmailToChuaDangKyStudents();
         return ResponseEntity.noContent().build();
     }
 

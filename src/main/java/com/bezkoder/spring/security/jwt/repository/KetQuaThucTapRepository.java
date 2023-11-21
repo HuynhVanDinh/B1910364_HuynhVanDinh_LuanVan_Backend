@@ -12,8 +12,9 @@ public interface KetQuaThucTapRepository extends JpaRepository<KetQuaThucTap, In
     List<KetQuaThucTap> findByDonViThucTap(DonViThucTap madvtt);
     List<KetQuaThucTap> findByDonViThucTapAndCanBoHuongDanIsNull(DonViThucTap madvtt);
     List<KetQuaThucTap> findByGiangVien(GiangVien magv);
+    List<KetQuaThucTap> findByCanBoHuongDanAndTrangThai(CanBo macb, int trangThai);
     List<KetQuaThucTap> findByCanBoHuongDan(CanBo macb);
-    List<KetQuaThucTap> findByDotThucTap(Integer madot);
+    List<KetQuaThucTap> findByDotThucTap(DotThucTap madot);
     Optional<KetQuaThucTap> findBySinhVien(SinhVien masv);
 
 }

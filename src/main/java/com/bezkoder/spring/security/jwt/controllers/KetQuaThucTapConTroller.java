@@ -44,13 +44,22 @@ public class KetQuaThucTapConTroller {
         return ketQuaThucTapService.getKetQuaThucTapByMaGv(magv);
     }
 
+    @GetMapping("/macb/{macb}/{trangThai}")
+    public List<KetQuaThucTap> getKetQuaThucTapByMaCb(@PathVariable Integer macb,@PathVariable Integer trangThai) {
+        return ketQuaThucTapService.getKetQuaThucTapByMaCb(macb, trangThai);
+    }
     @GetMapping("/macb/{macb}")
     public List<KetQuaThucTap> getKetQuaThucTapByMaCb(@PathVariable Integer macb) {
-        return ketQuaThucTapService.getKetQuaThucTapByMaCb(macb);
+        return ketQuaThucTapService.getAllKetQuaThucTapByMaCb(macb);
     }
     @GetMapping("/masv/{masv}")
     public KetQuaThucTap getKetQuaThucTapByMaSv(@PathVariable Integer masv) {
         return ketQuaThucTapService.getKetQuaTHucTapByMaSv(masv);
+    }
+
+    @GetMapping("/dot/{maDot}")
+    public List<KetQuaThucTap> getKetQuaThucTapByDot(@PathVariable Integer maDot) {
+        return ketQuaThucTapService.getKetQuaThucTapByDot(maDot);
     }
 
     @PostMapping("/{maSV}/{maDvtt}/{maGv}/{maDot}")
@@ -60,6 +69,25 @@ public class KetQuaThucTapConTroller {
                                                              @PathVariable Integer maGv,
                                                              @PathVariable Integer maDot) {
         KetQuaThucTap ketQuaThucTap = ketQuaThucTapService.createKetQuaThucTap(
+                maSV,
+                maDvtt,
+                maGv,
+                maDot
+        );
+        if (ketQuaThucTap != null) {
+            return new ResponseEntity<>(ketQuaThucTap, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/phancongcoquan/{maSV}/{maDvtt}/{maGv}/{maDot}")
+    public ResponseEntity<KetQuaThucTap> KhoaPhanKetQuaThucTap(
+            @PathVariable Integer maSV,
+            @PathVariable Integer maDvtt,
+            @PathVariable Integer maGv,
+            @PathVariable Integer maDot) {
+        KetQuaThucTap ketQuaThucTap = ketQuaThucTapService.KhoaPhanKetQuaThucTap(
                 maSV,
                 maDvtt,
                 maGv,
@@ -105,6 +133,19 @@ public class KetQuaThucTapConTroller {
         KetQuaThucTap updatedKetQuaThucTap = ketQuaThucTapService.updateDiemKetQuaThucTap(
                 ketQuaThucTapDto,
                 maGv
+        );
+        if (updatedKetQuaThucTap != null) {
+            return new ResponseEntity<>(updatedKetQuaThucTap, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/thaydoitrangthai")
+    public ResponseEntity<KetQuaThucTap> updateTrangThai(@RequestBody KetQuaThucTapDto ketQuaThucTapDto
+                                                                 ) {
+        KetQuaThucTap updatedKetQuaThucTap = ketQuaThucTapService.updateTrangThai(
+                ketQuaThucTapDto
+
         );
         if (updatedKetQuaThucTap != null) {
             return new ResponseEntity<>(updatedKetQuaThucTap, HttpStatus.OK);

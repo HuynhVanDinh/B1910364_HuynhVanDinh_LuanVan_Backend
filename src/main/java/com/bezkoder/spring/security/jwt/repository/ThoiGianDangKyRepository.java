@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface ThoiGianDangKyRepository extends JpaRepository<ThoiGianDangKy, Integer> {
 
-    List<ThoiGianDangKy> findByKhoa(Khoa khoa);
+    ThoiGianDangKy findByKhoa(Khoa khoa);
 }

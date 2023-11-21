@@ -38,7 +38,15 @@ public class TuanController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @GetMapping("/all/{trangThai}")
+    public ResponseEntity<List<Tuan>> getTuanByTrangThai(@PathVariable Integer trangThai) {
+        List<Tuan> tuan = tuanService.getTuanByTrangThai(trangThai);
+        if (tuan != null) {
+            return new ResponseEntity<>(tuan, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     @PreAuthorize("hasRole('CADRE')")
     @PostMapping
     public ResponseEntity<Tuan> createTuan(@RequestBody TuanDto tuanDto, @RequestParam Integer macb) {
@@ -65,5 +73,15 @@ public class TuanController {
     public ResponseEntity<HttpStatus> deleteTuan(@PathVariable Integer id) {
         tuanService.deleteTuan(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/hideAll")
+    public ResponseEntity<String> hideAllTuan() {
+        try {
+            tuanService.hideAllTuan();
+            return new ResponseEntity<>("Successfully updated tuan statuses.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to update tuan statuses.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

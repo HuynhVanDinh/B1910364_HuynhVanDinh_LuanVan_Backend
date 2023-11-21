@@ -29,10 +29,12 @@ public class TuanService {
     public Tuan getTuanById(Integer id) {
         return tuanRepository.findById(id).orElse(null);
     }
-
+    public List<Tuan> getTuanByTrangThai(Integer trangThai) {
+        return tuanRepository.findByIsComplete(trangThai);
+    }
     public List<Tuan> getTuanByCanbo(Integer canbo) {
         CanBo macb =  canBoRepository.findById(canbo).orElse(null);
-        return tuanRepository.findByCanbo(macb);
+        return tuanRepository.findByCanboAndIsComplete(macb,0);
     }
     @Transactional
     public Tuan createTuan(TuanDto tuanDto, Integer macb) {
@@ -40,14 +42,16 @@ public class TuanService {
 
         if (canboOptional.isPresent()) {
             CanBo maCB = canboOptional.get();
-            int soTuansDaTonTai = tuanRepository.countTuansByMaCB(maCB.getMaCB()); // Use getMaCB() to get the ID
+            int soTuansDaTonTai = tuanRepository.countTuansByMaCBAndIsComplete(maCB.getMaCB(),0);
             String tenTuan = "Tuần " + (soTuansDaTonTai + 1);
             Tuan tuan = new Tuan(
                     tenTuan,
                     tuanDto.getBatdau(),
                     tuanDto.getHethan(),
+                    tuanDto.getSo_buoi(),
                     maCB
             );
+            tuan.setIsComplete(0);
             return  tuanRepository.save(tuan);
         } else {
             return null;
@@ -61,6 +65,7 @@ public class TuanService {
 //            existingTuan.setTen_tuan(tuanDto.getTen_tuan());
             existingTuan.setBatdau(tuanDto.getBatdau());
             existingTuan.setHethan(tuanDto.getHethan());
+            existingTuan.setSo_buoi(tuanDto.getSo_buoi());
             return  tuanRepository.save(existingTuan);
         }
         return null;
@@ -70,6 +75,17 @@ public class TuanService {
         Tuan existingTuan= getTuanById(id);
         if (existingTuan != null) {
             tuanRepository.delete(existingTuan);
+        }
+    }
+
+    @Transactional
+    public void hideAllTuan() {
+        List<Tuan> existingTuan = getAllTuan();
+        if (existingTuan != null) {
+            for (Tuan tuan : existingTuan) {
+                tuan.setIsComplete(1);
+            }
+            tuanRepository.saveAll(existingTuan);
         }
     }
 }

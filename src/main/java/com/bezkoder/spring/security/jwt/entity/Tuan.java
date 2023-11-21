@@ -23,13 +23,18 @@ public class Tuan {
     private LocalDate batdau;
     @Column(name = "hethan")
     private LocalDate hethan;
+    @Column(name = "so_buoi")
+    private Integer so_buoi;
+    @Column(name = "is_complete")
+    private int isComplete;
     @ManyToOne
     @JoinColumn(name = "MaCB", referencedColumnName = "MaCB")
     private CanBo canbo;
-    public Tuan(String ten_tuan, LocalDate batdau, LocalDate hethan, CanBo canbo){
+    public Tuan(String ten_tuan, LocalDate batdau, LocalDate hethan, Integer so_buoi, CanBo canbo){
         this.ten_tuan = ten_tuan;
         this.batdau = batdau;
         this.hethan = hethan;
+        this.so_buoi = so_buoi;
         this.canbo = canbo;
     }
 }

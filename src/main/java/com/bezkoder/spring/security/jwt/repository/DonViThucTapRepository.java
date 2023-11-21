@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface DonViThucTapRepository extends JpaRepository<DonViThucTap,Integer> {
     List<DonViThucTap> findByTenDvttContainingIgnoreCase(String tenDvtt);
     Optional<DonViThucTap> findByAccountId(Integer accountId);
+
+    List<DonViThucTap> findDonViThucTapByIsKhoa(Integer trangthai);
 }

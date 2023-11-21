@@ -2,10 +2,7 @@ package com.bezkoder.spring.security.jwt.services;
 
 import com.bezkoder.spring.security.jwt.entity.*;
 import com.bezkoder.spring.security.jwt.payload.request.SinhVienDto;
-import com.bezkoder.spring.security.jwt.repository.AccountRepository;
-import com.bezkoder.spring.security.jwt.repository.LopRepository;
-import com.bezkoder.spring.security.jwt.repository.RoleRepository;
-import com.bezkoder.spring.security.jwt.repository.SinhVienRepository;
+import com.bezkoder.spring.security.jwt.repository.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +18,7 @@ import java.util.Properties;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SinhVienService {
@@ -35,6 +33,17 @@ public class SinhVienService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private KetQuaThucTapRepository ketQuaThucTapRepository;
+
+    @Autowired
+    private ThoiGianDangKyRepository thoiGianDangKyRepository;
+    private final EmailService emailService;
+
+    @Autowired
+    public SinhVienService(EmailService emailService) {
+        this.emailService = emailService;
+    }
     public List<SinhVien> getAllSinhVien() {
         return sinhVienRepository.findAll();
     }
@@ -45,6 +54,33 @@ public class SinhVienService {
     public SinhVien getSinhVienByAccountId(Integer accountid) {
         return sinhVienRepository.findByAccountId(accountid).orElse(null);
     }
+    public List<SinhVien> getSinhVienChuaDangKy() {
+        List<SinhVien> allSinhVien = sinhVienRepository.findAll();
+        List<Integer> sinhVienIdsWithKetQuaThucTap = ketQuaThucTapRepository.findAll().stream()
+                .map(ketQuaThucTap -> ketQuaThucTap.getSinhVien().getMaSV())
+                .collect(Collectors.toList());
+
+        return allSinhVien.stream()
+                .filter(sinhVien -> !sinhVienIdsWithKetQuaThucTap.contains(sinhVien.getMaSV()))
+                .collect(Collectors.toList());
+    }
+
+    public void sendEmailToChuaDangKyStudents() {
+        List<SinhVien> chuaDangKyStudents = getSinhVienChuaDangKy();
+
+        for (SinhVien sinhVien : chuaDangKyStudents) {
+            ThoiGianDangKy thoiGianDangKy = thoiGianDangKyRepository.findByKhoa(sinhVien.getLop().getKhoa());
+
+            String studentEmail = sinhVien.getAccount().getEmail();
+
+
+            String subject = "Về việc Thực tập thực tế (TTTT).";
+            String content = "Chào các em,\n"+"Các em cố  gắng tìm công ty TTTT vì sau thời gian "+thoiGianDangKy.getTgkt()+" em nào chưa tìm được công ty TTTT thì thường Khoa sẽ phân";
+
+            emailService.sendEmail(studentEmail, subject, content);
+        }
+    }
+
     @Transactional
     public SinhVien createSinhVien(SinhVienDto sinhVienDto, Integer lopId, String email) {
         Lop lop = lopRepository.findById(lopId).orElse(null);

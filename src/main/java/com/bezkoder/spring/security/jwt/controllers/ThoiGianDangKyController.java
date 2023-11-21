@@ -40,10 +40,10 @@ public class ThoiGianDangKyController {
         }
     }
     @GetMapping("/khoa")
-    public ResponseEntity<List<ThoiGianDangKy>> getThoiGianDangKyByKhoa(@RequestParam Integer khoaId) {
+    public ResponseEntity<ThoiGianDangKy> getThoiGianDangKyByKhoa(@RequestParam Integer khoaId) {
         Khoa khoa = khoaService.getKhoaById(khoaId);
         if (khoa != null) {
-            List<ThoiGianDangKy> thoiGianDangKyList = thoiGianDangKyService.getThoiGianDangKyByKhoa(khoa);
+            ThoiGianDangKy thoiGianDangKyList = thoiGianDangKyService.getThoiGianDangKyByKhoa(khoa);
             return new ResponseEntity<>(thoiGianDangKyList, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

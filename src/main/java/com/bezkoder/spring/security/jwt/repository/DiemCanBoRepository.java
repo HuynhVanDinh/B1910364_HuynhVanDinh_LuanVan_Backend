@@ -10,4 +10,6 @@ import java.util.List;
 public interface DiemCanBoRepository extends JpaRepository<DiemCanBo, Integer> {
     List<DiemCanBo> findDiemCanBoByCanBo(CanBo canBo);
     List<DiemCanBo> findDiemCanBoBySinhVien(SinhVien sinhVien);
+
+    DiemCanBo findDiemCanBoByPhieuDiemCanboAndSinhVien(PhieuDiemCanbo phieuDiemCanbo, SinhVien sinhVien);
 }

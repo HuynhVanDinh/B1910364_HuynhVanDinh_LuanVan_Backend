@@ -11,8 +11,11 @@ import java.util.List;
 
 @Repository
 public interface TuanRepository extends JpaRepository<Tuan, Integer> {
-    List<Tuan> findByCanbo(CanBo macb);
-    @Query("SELECT COUNT(t) FROM Tuan t WHERE t.canbo.maCB = :maCB")
-    int countTuansByMaCB(@Param("maCB") Integer maCB);
+    List<Tuan> findByCanboAndIsComplete(CanBo macb, int isComplete);
+    List<Tuan> findByIsComplete(int isComplete);
+//    @Query("SELECT COUNT(t) FROM Tuan t WHERE t.canbo.maCB = :maCB")
+//    int countTuansByMaCBAndIsComplete(@Param("maCB") Integer maCB,int isComplete);
+@Query("SELECT COUNT(t) FROM Tuan t WHERE t.canbo.maCB = :maCB AND t.isComplete = :isComplete")
+int countTuansByMaCBAndIsComplete(@Param("maCB") Integer maCB, @Param("isComplete") int isComplete);
 
 }
