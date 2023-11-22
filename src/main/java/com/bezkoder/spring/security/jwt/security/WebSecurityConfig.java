@@ -104,6 +104,7 @@ public class WebSecurityConfig { // extends WebSecurityConfigurerAdapter {
 			.antMatchers("/api/dangky/**").permitAll()
 			.antMatchers("/api/congviec/**").permitAll()
 			.antMatchers("/api/pdf/**").permitAll()
+			.antMatchers("/api/excel").permitAll()
 			.antMatchers("/api/ketquathuctap/**").permitAll()
 			.antMatchers("/api/thoigiandangky/**").permitAll()
 			.antMatchers("/api/tuan/**").permitAll()

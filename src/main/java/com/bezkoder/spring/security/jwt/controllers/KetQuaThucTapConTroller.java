@@ -39,9 +39,9 @@ public class KetQuaThucTapConTroller {
         return ketQuaThucTapService.getKetQuaThucTapChuaPhanCong(madvtt);
     }
 
-    @GetMapping("/magv/{magv}")
-    public List<KetQuaThucTap> getKetQuaThucTapByMaGv(@PathVariable Integer magv) {
-        return ketQuaThucTapService.getKetQuaThucTapByMaGv(magv);
+    @GetMapping("/magv/{magv}/{trangThai}")
+    public List<KetQuaThucTap> getKetQuaThucTapByMaGv(@PathVariable Integer magv,@PathVariable Integer trangThai) {
+        return ketQuaThucTapService.getKetQuaThucTapByMaGv(magv, trangThai);
     }
 
     @GetMapping("/macb/{macb}/{trangThai}")

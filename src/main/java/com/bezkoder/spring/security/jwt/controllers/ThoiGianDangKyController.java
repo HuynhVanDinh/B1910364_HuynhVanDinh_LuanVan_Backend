@@ -4,6 +4,7 @@ import com.bezkoder.spring.security.jwt.entity.DangKy;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
 import com.bezkoder.spring.security.jwt.entity.ThoiGianDangKy;
 import com.bezkoder.spring.security.jwt.payload.request.ThoiGianDangKyDto;
+import com.bezkoder.spring.security.jwt.payload.response.MessageResponse;
 import com.bezkoder.spring.security.jwt.services.KhoaService;
 import com.bezkoder.spring.security.jwt.services.ThoiGianDangKyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -51,24 +53,38 @@ public class ThoiGianDangKyController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<ThoiGianDangKy> createThoiGianDangKy(@RequestBody ThoiGianDangKyDto thoiGianDangKyDto, @RequestParam Integer khoaid) {
-
-        ThoiGianDangKy createdThoiGianDangKy = thoiGianDangKyService.createThoiGianDangky(thoiGianDangKyDto, khoaid);
-        if (createdThoiGianDangKy != null) {
-            return new ResponseEntity<>(createdThoiGianDangKy, HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> createThoiGianDangKy(@RequestBody ThoiGianDangKyDto thoiGianDangKyDto, @RequestParam Integer khoaid) {
+        try {
+            ThoiGianDangKy createdThoiGianDangKy = thoiGianDangKyService.createThoiGianDangky(thoiGianDangKyDto, khoaid);
+            if (createdThoiGianDangKy != null) {
+                return new ResponseEntity<>(createdThoiGianDangKy, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(new MessageResponse(e.getReason()), e.getStatus());
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MessageResponse("Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<ThoiGianDangKy> updateThoiGianDangKy(@PathVariable Integer id, @RequestBody ThoiGianDangKyDto thoiGianDangKyDto) {
-        ThoiGianDangKy updatedThoiGianDangKy = thoiGianDangKyService.updateThoiGianDangKy(id, thoiGianDangKyDto);
-        if (updatedThoiGianDangKy != null) {
-            return new ResponseEntity<>(updatedThoiGianDangKy, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> updateThoiGianDangKy(@PathVariable Integer id, @RequestBody ThoiGianDangKyDto thoiGianDangKyDto) {
+
+        try {
+            ThoiGianDangKy updatedThoiGianDangKy = thoiGianDangKyService.updateThoiGianDangKy(id, thoiGianDangKyDto);
+            if (updatedThoiGianDangKy != null) {
+                return new ResponseEntity<>(updatedThoiGianDangKy, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(new MessageResponse(e.getReason()), e.getStatus());
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MessageResponse("Internal Server Error"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")

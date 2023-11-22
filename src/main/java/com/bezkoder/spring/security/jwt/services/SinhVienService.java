@@ -51,6 +51,11 @@ public class SinhVienService {
     public SinhVien getSinhVienById(Integer id) {
         return sinhVienRepository.findById(id).orElse(null);
     }
+
+    public List<SinhVien> getSinhVienByLop(Integer maLop) {
+        Lop lop = lopRepository.findById(maLop).orElse(null);
+        return sinhVienRepository.findSinhVienByLop(lop);
+    }
     public SinhVien getSinhVienByAccountId(Integer accountid) {
         return sinhVienRepository.findByAccountId(accountid).orElse(null);
     }

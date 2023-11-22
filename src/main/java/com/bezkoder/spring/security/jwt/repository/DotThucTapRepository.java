@@ -1,5 +1,6 @@
 package com.bezkoder.spring.security.jwt.repository;
 
+import com.bezkoder.spring.security.jwt.entity.CanBo;
 import com.bezkoder.spring.security.jwt.entity.DotThucTap;
 import com.bezkoder.spring.security.jwt.entity.Khoa;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,4 +21,5 @@ public interface DotThucTapRepository extends JpaRepository<DotThucTap, Integer>
     List<DotThucTap> findDotThucTapByThoiGianBatDauAndThoiGianKetThuc(LocalDate thoiGianBatDau, LocalDate thoiGianKetThuc);
     List<DotThucTap> findDotThucTapByThoiGianBatDau(LocalDate thoiGianBatDau);
     List<DotThucTap> findDotThucTapByThoiGianKetThuc(LocalDate thoiGianKetThuc);
+    boolean existsByThoiGianBatDauBeforeAndThoiGianKetThucAfter( LocalDate batdau, LocalDate hethan);
 }

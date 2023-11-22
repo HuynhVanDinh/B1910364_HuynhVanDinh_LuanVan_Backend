@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface BaiDangRepository extends JpaRepository<BaiDang, Integer> {
 
     BaiDang findByDonViThucTap(DonViThucTap donViThucTap);
+
 }

@@ -31,6 +31,8 @@ public class KetQuaThucTapService {
     private  DangKyRepository dangKyRepository;
     @Autowired
     private TuanRepository tuanRepository;
+    @Autowired
+    private EmailService emailService;
     public List<KetQuaThucTap> getAllKetQuaThucTap() {
         return ketQuaThucTapRepository.findAll();
     }
@@ -56,8 +58,8 @@ public class KetQuaThucTapService {
         return ketQuaThucTapRepository.findByDonViThucTapAndCanBoHuongDanIsNull(donViThucTap);
     }
 
-    public List<KetQuaThucTap> getKetQuaThucTapByMaGv(Integer magv){
-        return ketQuaThucTapRepository.findByGiangVien(giangVienRepository.findById(magv).orElse(null));
+    public List<KetQuaThucTap> getKetQuaThucTapByMaGv(Integer magv, Integer trangThai){
+        return ketQuaThucTapRepository.findByGiangVienAndTrangThai(giangVienRepository.findById(magv).orElse(null), trangThai);
     }
     public List<KetQuaThucTap> getKetQuaThucTapByMaCb(Integer macb, Integer trangThai){
         CanBo canBohuongdan = canBoRepository.findById(macb).orElse(null);
@@ -68,6 +70,11 @@ public class KetQuaThucTapService {
         CanBo canBohuongdan = canBoRepository.findById(macb).orElse(null);
         return ketQuaThucTapRepository.findByCanBoHuongDan(canBohuongdan);
     }
+
+    public List<KetQuaThucTap> searchKetQuaThucTap(String keyword) {
+        return ketQuaThucTapRepository.searchKetQuaThucTap(keyword);
+    }
+
 
     public KetQuaThucTap getKetQuaTHucTapByMaSv(Integer masv){
         SinhVien sinhVien = sinhVienRepository.findById(masv).orElse(null);
@@ -126,6 +133,11 @@ public class KetQuaThucTapService {
                     giangVien,
                     dotThucTap
             );
+            String studentEmail = sinhVien.getAccount().getEmail();
+            String subject = "Về việc Thực tập thực tế (TTTT).";
+            String content = "Chào em, "+sinhVien.getTenSV()+",\n"+"Hiện tại em được phân công cho "+donViThucTap.getTenDvtt()+"\n Trân trọng, Quản trị viên";
+            emailService.sendEmail(studentEmail, subject, content);
+
             ketQuaThucTap.setCanBoHuongDan(null);
             ketQuaThucTap.setTrangThai(0);
             ketQuaThucTap.setDiem(null);
@@ -164,6 +176,13 @@ public class KetQuaThucTapService {
             return null;
         }
         existingKetQuaThucTap.setDiem(ketQuaThucTapDto.getDiem());
+        existingKetQuaThucTap.setTrangThai(3);
+        CanBo canBo = canBoRepository.findById(ketQuaThucTapDto.getCanbo()).orElse(null);
+        List<Tuan>  existingTuan = tuanRepository.findByCanboAndIsComplete(canBo,1);
+        for (Tuan tuan : existingTuan) {
+            tuan.setIsComplete(2);
+        }
+        tuanRepository.saveAll(existingTuan);
         return ketQuaThucTapRepository.save(existingKetQuaThucTap);
     }
     @Transactional
@@ -175,7 +194,7 @@ public class KetQuaThucTapService {
         }
         existingKetQuaThucTap.setTrangThai(ketQuaThucTapDto.getTrangThai());
         CanBo canBo = canBoRepository.findById(ketQuaThucTapDto.getCanbo()).orElse(null);
-       List<Tuan>  existingTuan = tuanRepository.findByCanboAndIsComplete(canBo,0);
+        List<Tuan>  existingTuan = tuanRepository.findByCanboAndIsComplete(canBo,0);
         for (Tuan tuan : existingTuan) {
             tuan.setIsComplete(1);
         }
