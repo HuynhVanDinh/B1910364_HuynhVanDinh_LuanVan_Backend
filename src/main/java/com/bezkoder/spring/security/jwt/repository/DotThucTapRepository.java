@@ -22,4 +22,6 @@ public interface DotThucTapRepository extends JpaRepository<DotThucTap, Integer>
     List<DotThucTap> findDotThucTapByThoiGianBatDau(LocalDate thoiGianBatDau);
     List<DotThucTap> findDotThucTapByThoiGianKetThuc(LocalDate thoiGianKetThuc);
     boolean existsByThoiGianBatDauBeforeAndThoiGianKetThucAfter( LocalDate batdau, LocalDate hethan);
+
+    boolean existsByThoiGianBatDauBeforeAndThoiGianKetThucAfterAndMaDotNot( LocalDate batdau, LocalDate hethan, Integer id );
 }

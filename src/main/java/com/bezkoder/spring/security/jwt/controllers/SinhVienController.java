@@ -82,6 +82,18 @@ public class SinhVienController {
 //        return ResponseEntity.ok(updatedSinhVien);
     }
     @PreAuthorize("hasRole('STUDENT')")
+    @PutMapping("/chinhsua/{sinhvienId}")
+    public ResponseEntity<MessageResponse> editSinhVien(@PathVariable Integer sinhvienId,
+                                                          @RequestBody SinhVienDto sinhVienDto
+    ) {
+        SinhVien updatedSinhVien = sinhVienService.editSinhVien(sinhvienId, sinhVienDto);
+        if (updatedSinhVien != null) {
+            return ResponseEntity.ok(new MessageResponse("Cập nhật sinh viên thành công!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PreAuthorize("hasRole('STUDENT')")
     @PutMapping("/{sinhvienId}/capnhatanhdien")
     public ResponseEntity<MessageResponse> updateAvt(@PathVariable Integer sinhvienId,
                                                           @RequestBody String hinhAnh

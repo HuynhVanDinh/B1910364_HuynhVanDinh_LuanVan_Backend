@@ -167,6 +167,16 @@ public class SinhVienService {
         }
 
     }
+
+    @Transactional
+    public SinhVien editSinhVien(Integer sinhvienId, SinhVienDto sinhVienDto) {
+        SinhVien existingSinhVien = getSinhVienById(sinhvienId);
+            existingSinhVien.setTenSV(sinhVienDto.getTenSV());
+            existingSinhVien.setNgaySinh(sinhVienDto.getNgaySinh());
+            existingSinhVien.setQueQuan(sinhVienDto.getQueQuan());
+            return sinhVienRepository.save(existingSinhVien);
+
+    }
     @Transactional
     public SinhVien updateAvt(Integer sinhvienId, String hinhAnh) {
         SinhVien existingSinhVien = getSinhVienById(sinhvienId);

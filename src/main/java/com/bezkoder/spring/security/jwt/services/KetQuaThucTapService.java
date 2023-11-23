@@ -75,6 +75,10 @@ public class KetQuaThucTapService {
         return ketQuaThucTapRepository.searchKetQuaThucTap(keyword);
     }
 
+    public List<KetQuaThucTap> searchKetQuaThucTapByGiangVien(String keyword, int magv) {
+        return ketQuaThucTapRepository.searchKetQuaThucTapByGiangVien(keyword, magv);
+    }
+
 
     public KetQuaThucTap getKetQuaTHucTapByMaSv(Integer masv){
         SinhVien sinhVien = sinhVienRepository.findById(masv).orElse(null);

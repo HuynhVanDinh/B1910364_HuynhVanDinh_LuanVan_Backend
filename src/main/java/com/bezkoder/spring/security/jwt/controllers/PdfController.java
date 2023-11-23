@@ -389,4 +389,98 @@ public class PdfController {
         os.close();
     }
 
+    @GetMapping("/ketquathuctap/{maGv}")
+    public void displayKetquaThuctapPdfByGiangVien(
+            HttpServletResponse response,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            @PathVariable Integer maGv
+    ) throws IOException, DocumentException {
+        response.setContentType("application/pdf; charset=UTF-8");
+        String fontPath = "src/main/resources/times.ttf";
+
+        List<KetQuaThucTap> KetQuaThucTapList;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            // Filter by keyword (student name or student ID) if the parameter is provided
+            KetQuaThucTapList = ketQuaThucTapService.searchKetQuaThucTapByGiangVien(keyword, maGv);
+        } else {
+            // Otherwise, get all results
+            KetQuaThucTapList = ketQuaThucTapService.getKetQuaThucTapByMaGv(maGv,3);
+        }
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Tạo font và định dạng
+        BaseFont customBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(customBaseFont, 18, Font.NORMAL, BaseColor.BLACK);
+        Font contentFont = new Font(customBaseFont, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+
+        // Định dạng tiêu đề
+        Paragraph title = new Paragraph("DANH SÁCH KẾT QUẢ CỦA SINH VIÊN", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Định dạng nội dung
+        PdfPTable table = new PdfPTable(4);
+        table.setWidthPercentage(100);
+
+        // Tiêu đề cho từng cột
+        PdfPCell cell1 = new PdfPCell(new Phrase("Mã sinh viên", contentFont));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Tên sinh viên", contentFont));
+        PdfPCell cell3 = new PdfPCell(new Phrase("Lớp", contentFont));
+        PdfPCell cell4 = new PdfPCell(new Phrase("Điểm số", contentFont));
+
+        // Đặt kích thước và định dạng cho cột
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        table.addCell(cell1);
+        table.addCell(cell2);
+        table.addCell(cell3);
+        table.addCell(cell4);
+
+        // Thêm dữ liệu từ danh sách các khoa
+        if (KetQuaThucTapList.isEmpty()) {
+            // No data found, add a message
+            PdfPCell cellMessage = new PdfPCell(new Phrase("Không có dữ liệu", contentFont));
+            cellMessage.setColspan(4); // Span across all columns
+            cellMessage.setHorizontalAlignment(Element.ALIGN_CENTER);
+            table.addCell(cellMessage);
+        } else {
+            for (KetQuaThucTap ketqua : KetQuaThucTapList) {
+                PdfPCell cellMaDv = new PdfPCell(new Phrase(String.valueOf(ketqua.getSinhVien().getMaSV()), contentFont));
+                PdfPCell cellTenDv = new PdfPCell(new Phrase(ketqua.getSinhVien().getTenSV(), contentFont));
+                String diemValue = (ketqua.getDiem() != null) ? String.valueOf(ketqua.getDiem()) : "Chưa rõ";
+                PdfPCell cellDiaChi = new PdfPCell(new Phrase(diemValue, contentFont));
+                PdfPCell cellSoDt = new PdfPCell(new Phrase(ketqua.getSinhVien().getLop().getTenLop(), contentFont));
+
+                cellMaDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellTenDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellDiaChi.setHorizontalAlignment(Element.ALIGN_CENTER);
+                cellSoDt.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+                table.addCell(cellMaDv);
+                table.addCell(cellTenDv);
+                table.addCell(cellSoDt);
+                table.addCell(cellDiaChi);
+            }
+        }
+
+        document.add(new Paragraph("\n"));
+        document.add(table);
+
+        document.close();
+
+        byte[] pdfBytes = baos.toByteArray();
+        response.setContentLength(pdfBytes.length);
+        OutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.close();
+    }
+
 }

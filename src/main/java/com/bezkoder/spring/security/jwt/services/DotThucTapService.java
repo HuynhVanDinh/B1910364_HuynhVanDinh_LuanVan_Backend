@@ -61,7 +61,7 @@ public class DotThucTapService {
             }
 
             // Kiểm tra xem có tuần trùng lặp không
-            boolean isOverlap = dotThucTapRepository.existsByThoiGianBatDauBeforeAndThoiGianKetThucAfter(ketthuc, batdau);
+            boolean isOverlap = dotThucTapRepository.existsByThoiGianBatDauBeforeAndThoiGianKetThucAfterAndMaDotNot(ketthuc, batdau, existingDotThucTap.getMaDot());
             if (isOverlap) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Thời gian trùng lặp với đợt khác");
             }
