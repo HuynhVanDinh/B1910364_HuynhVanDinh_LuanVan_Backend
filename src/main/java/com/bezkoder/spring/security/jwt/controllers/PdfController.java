@@ -1,12 +1,6 @@
 package com.bezkoder.spring.security.jwt.controllers;
-import com.bezkoder.spring.security.jwt.entity.DonViThucTap;
-import com.bezkoder.spring.security.jwt.entity.KetQuaThucTap;
-import com.bezkoder.spring.security.jwt.entity.Khoa;
-import com.bezkoder.spring.security.jwt.entity.Lop;
-import com.bezkoder.spring.security.jwt.services.DonViThucTapService;
-import com.bezkoder.spring.security.jwt.services.KetQuaThucTapService;
-import com.bezkoder.spring.security.jwt.services.KhoaService;
-import com.bezkoder.spring.security.jwt.services.LopService;
+import com.bezkoder.spring.security.jwt.entity.*;
+import com.bezkoder.spring.security.jwt.services.*;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
@@ -33,6 +27,10 @@ public class PdfController {
     private DonViThucTapService donviService;
     @Autowired
     private KetQuaThucTapService ketQuaThucTapService;
+    @Autowired
+    private SinhVienService sinhVienService;
+    @Autowired
+    private GiangVienService giangVienService;
 //    @GetMapping("/khoa")
 //    public void exportKhoaToPdf(HttpServletResponse response) throws IOException, DocumentException {
 //        response.setContentType("application/pdf");
@@ -283,6 +281,168 @@ public class PdfController {
             table.addCell(cellTenDv);
             table.addCell(cellSoDt);
             table.addCell(cellDiaChi);
+
+        }
+        document.add(new Paragraph("\n"));
+        document.add(table);
+
+        document.close();
+
+        byte[] pdfBytes = baos.toByteArray();
+        response.setContentLength(pdfBytes.length);
+        OutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.close();
+    }
+    @GetMapping("/giangvien")
+    public void displayGiangVienPdf(HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf; charset=UTF-8");
+        String fontPath = "src/main/resources/times.ttf";
+        List<GiangVien> GiangVienList = giangVienService.getAllGiangVien();
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Tạo font và định dạng
+        BaseFont customBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(customBaseFont, 18, Font.NORMAL, BaseColor.BLACK);
+        Font contentFont = new Font(customBaseFont, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+
+        // Định dạng tiêu đề
+        Paragraph title = new Paragraph("DANH SÁCH CÁC GIẢNG VIÊN", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Định dạng nội dung
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+
+        // Tiêu đề cho từng cột
+        PdfPCell cell1 = new PdfPCell(new Phrase("Mã giảng viên", contentFont));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Tên giảng viên", contentFont));
+        PdfPCell cell3 = new PdfPCell(new Phrase("Khoa", contentFont));
+//        PdfPCell cell4 = new PdfPCell(new Phrase("Địa chỉ", contentFont));
+
+        // Đặt kích thước và định dạng cho cột
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+//        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        table.addCell(cell1);
+        table.addCell(cell2);
+        table.addCell(cell3);
+//        table.addCell(cell4);
+
+
+        // Thêm dữ liệu từ danh sách các khoa
+        for (GiangVien giangVien : GiangVienList) {
+            PdfPCell cellMaDv = new PdfPCell(new Phrase(String.valueOf(giangVien.getMaGV()), contentFont));
+            PdfPCell cellTenDv = new PdfPCell(new Phrase(giangVien.getTenGV(), contentFont));
+            PdfPCell cellDiaChi = new PdfPCell(new Phrase(giangVien.getKhoa().getKhoaName(), contentFont));
+//            PdfPCell cellSoDt = new PdfPCell(new Phrase(donvi.getSoDt(), contentFont));
+
+
+            cellMaDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTenDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellDiaChi.setHorizontalAlignment(Element.ALIGN_CENTER);
+//            cellSoDt.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+            table.addCell(cellMaDv);
+            table.addCell(cellTenDv);
+//            table.addCell(cellSoDt);
+            table.addCell(cellDiaChi);
+
+        }
+        document.add(new Paragraph("\n"));
+        document.add(table);
+
+        document.close();
+
+        byte[] pdfBytes = baos.toByteArray();
+        response.setContentLength(pdfBytes.length);
+        OutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.close();
+    }
+    @GetMapping("/sinhvien")
+    public void displaySinhvienPdf(HttpServletResponse response) throws IOException, DocumentException {
+        response.setContentType("application/pdf; charset=UTF-8");
+        String fontPath = "src/main/resources/times.ttf";
+        List<SinhVien> SinhvienList = sinhVienService.getAllSinhVien();
+
+        Document document = new Document();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PdfWriter writer = PdfWriter.getInstance(document, baos);
+        document.open();
+
+        // Tạo font và định dạng
+        BaseFont customBaseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        Font titleFont = new Font(customBaseFont, 18, Font.NORMAL, BaseColor.BLACK);
+        Font contentFont = new Font(customBaseFont, 12, Font.NORMAL, BaseColor.DARK_GRAY);
+
+        // Định dạng tiêu đề
+        Paragraph title = new Paragraph("DANH SÁCH CÁC SINH VIÊN", titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        document.add(title);
+
+        // Định dạng nội dung
+        PdfPTable table = new PdfPTable(6);
+        table.setWidthPercentage(100);
+
+        // Tiêu đề cho từng cột
+        PdfPCell cell1 = new PdfPCell(new Phrase("MSSV", contentFont));
+        PdfPCell cell2 = new PdfPCell(new Phrase("Tên", contentFont));
+        PdfPCell cell3 = new PdfPCell(new Phrase("Giới tính", contentFont));
+        PdfPCell cell4 = new PdfPCell(new Phrase("Ngày sinh", contentFont));
+        PdfPCell cell5 = new PdfPCell(new Phrase("Quê quán", contentFont));
+        PdfPCell cell6 = new PdfPCell(new Phrase("Lớp", contentFont));
+
+        // Đặt kích thước và định dạng cho cột
+        cell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell2.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell3.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell4.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell5.setHorizontalAlignment(Element.ALIGN_CENTER);
+        cell6.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+        table.addCell(cell1);
+        table.addCell(cell2);
+        table.addCell(cell3);
+        table.addCell(cell4);
+        table.addCell(cell5);
+        table.addCell(cell6);
+
+        // Thêm dữ liệu từ danh sách các khoa
+        for (SinhVien sinhVien : SinhvienList) {
+            PdfPCell cellMaDv = new PdfPCell(new Phrase(String.valueOf(sinhVien.getMaSV()), contentFont));
+            PdfPCell cellTenDv = new PdfPCell(new Phrase(sinhVien.getTenSV(), contentFont));
+            PdfPCell cellDiaChi = new PdfPCell(new Phrase(sinhVien.getGioiTinh(), contentFont));
+            PdfPCell cellSoDt = new PdfPCell(new Phrase(String.valueOf(sinhVien.getNgaySinh()), contentFont));
+            PdfPCell cellQueQuan = new PdfPCell(new Phrase(sinhVien.getQueQuan(), contentFont));
+            PdfPCell cellLop = new PdfPCell(new Phrase(sinhVien.getLop().getTenLop(), contentFont));
+
+
+
+
+            cellMaDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellTenDv.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellDiaChi.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellSoDt.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellQueQuan.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cellLop.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+
+            table.addCell(cellMaDv);
+            table.addCell(cellTenDv);
+            table.addCell(cellDiaChi);
+            table.addCell(cellSoDt);
+            table.addCell(cellQueQuan);
+            table.addCell(cellLop);
+
 
         }
         document.add(new Paragraph("\n"));

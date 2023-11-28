@@ -20,7 +20,6 @@ public class SinhVienController {
     @Autowired
     private SinhVienService sinhVienService;
 
-
     @GetMapping
     public ResponseEntity<List<SinhVien>> getAllSinhVien() {
         List<SinhVien> sinhvienList = sinhVienService.getAllSinhVien();
