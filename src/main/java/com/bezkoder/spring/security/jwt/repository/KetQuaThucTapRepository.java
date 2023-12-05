@@ -23,10 +23,13 @@ public interface KetQuaThucTapRepository extends JpaRepository<KetQuaThucTap, In
 @Query("SELECT k FROM KetQuaThucTap k WHERE LOWER(k.sinhVien.tenSV) LIKE %:keyword% OR LOWER(k.sinhVien.maSV) LIKE %:keyword% OR LOWER(k.sinhVien.lop.tenLop) LIKE %:keyword%")
 List<KetQuaThucTap> searchKetQuaThucTap(@Param("keyword") String keyword);
     @Query("SELECT k FROM KetQuaThucTap k WHERE " +
-            "LOWER(k.sinhVien.tenSV) LIKE %:keyword% OR " +
+            "(LOWER(k.sinhVien.tenSV) LIKE %:keyword% OR " +
             "LOWER(k.sinhVien.maSV) LIKE %:keyword% OR " +
-            "LOWER(k.sinhVien.lop.tenLop) LIKE %:keyword% AND " +
-            "LOWER(k.giangVien.maGV) LIKE %:magv%")
+            "LOWER(k.sinhVien.lop.tenLop) LIKE %:keyword%) AND " +
+            "k.trangThai = 3 AND " +
+            "k.giangVien.maGV = :magv")
     List<KetQuaThucTap> searchKetQuaThucTapByGiangVien(@Param("keyword") String keyword, @Param("magv") int magv);
+
+
 
 }

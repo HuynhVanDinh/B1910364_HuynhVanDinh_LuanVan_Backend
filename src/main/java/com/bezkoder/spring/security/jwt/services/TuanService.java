@@ -71,6 +71,7 @@ public class TuanService {
                     tuanDto.getSo_buoi(),
                     maCB
             );
+
             tuan.setIsComplete(0);
             return tuanRepository.save(tuan);
         } else {
@@ -96,6 +97,7 @@ public class TuanService {
             if (isOverlap) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "Thời gian trùng lặp với tuần khác");
             }
+
 //            existingTuan.setTen_tuan(tuanDto.getTen_tuan());
             existingTuan.setBatdau(tuanDto.getBatdau());
             existingTuan.setHethan(tuanDto.getHethan());

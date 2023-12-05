@@ -39,7 +39,11 @@ public class DiemGiangVienController {
         List<DiemGiangVien> diemGiangVienList = diemGiangVienService.getAllDiemByGiangVien(maGV);
         return new ResponseEntity<>(diemGiangVienList, HttpStatus.OK);
     }
-
+    @GetMapping("/sinhvien/{maSV}")
+    public ResponseEntity<List<DiemGiangVien>> getDiemGiangVienBySinhVien(@PathVariable Integer maSV) {
+        List<DiemGiangVien> diemGiangVienList = diemGiangVienService.getAllDiemSinhvien(maSV);
+        return new ResponseEntity<>(diemGiangVienList, HttpStatus.OK);
+    }
     @PostMapping
     public ResponseEntity<DiemGiangVien> createDiemGiangVien(@RequestBody DiemGiangVienDto diemGiangVienDto, @RequestParam Integer maSV, @RequestParam Integer maGV, @RequestParam Integer maPhieu ) {
         DiemGiangVien createdDiemGiangVien = diemGiangVienService.createDiemGiangVien(diemGiangVienDto, maPhieu, maSV, maGV );
