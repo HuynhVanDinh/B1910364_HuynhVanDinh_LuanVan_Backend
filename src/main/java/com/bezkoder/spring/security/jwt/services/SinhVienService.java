@@ -4,16 +4,27 @@ import com.bezkoder.spring.security.jwt.entity.*;
 import com.bezkoder.spring.security.jwt.payload.request.SinhVienDto;
 import com.bezkoder.spring.security.jwt.repository.*;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.Properties;
 
 import java.util.List;
@@ -138,6 +149,86 @@ public class SinhVienService {
 
         }
 
+    }
+    @Transactional
+    public SinhVien createSinhVienFromExcel(MultipartFile excelFile) {
+        try (InputStream inputStream = excelFile.getInputStream()) {
+            Workbook workbook = new XSSFWorkbook(inputStream);
+            Sheet sheet = workbook.getSheetAt(0); // Assuming data is in the first sheet
+            Iterator<Row> iterator = sheet.iterator();
+
+            while (iterator.hasNext()) {
+                Row currentRow = iterator.next();
+                Iterator<Cell> cellIterator = currentRow.iterator();
+
+                // Assuming your Excel has columns for tenSV, hinhAnh, gioiTinh, ngaySinh, queQuan, lopId, email
+
+                String tenSV = cellIterator.next().getStringCellValue();
+                String hinhAnh = cellIterator.next().getStringCellValue();
+                String gioiTinh = cellIterator.next().getStringCellValue();
+                String ngaySinhStr = cellIterator.next().getStringCellValue();
+                LocalDate ngaySinh = LocalDate.parse(ngaySinhStr);
+                String queQuan = cellIterator.next().getStringCellValue();
+                Integer lopId = (int) cellIterator.next().getNumericCellValue(); // Assuming lopId is numeric
+                String email = cellIterator.next().getStringCellValue();
+
+                Lop lop = lopRepository.findById(lopId).orElse(null);
+
+                if (lop != null) {
+                    SinhVien sinhVien = new SinhVien(tenSV, hinhAnh, gioiTinh, ngaySinh, queQuan, lop);
+
+                    SinhVien savedSinhVien = sinhVienRepository.save(sinhVien);
+                    String username = generateUniqueUsername(savedSinhVien.getTenSV());
+
+                    // Create an account for the student
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    String randomPassword = RandomStringUtils.randomAlphanumeric(10);
+                    String encodedPassword = passwordEncoder.encode(randomPassword);
+
+                    Account taiKhoan = new Account();
+                    taiKhoan.setUsername(username);
+                    taiKhoan.setPassword(encodedPassword);
+                    taiKhoan.setEmail(email);
+
+                    // Set roles for the account, assuming ERole is an Enum representing roles
+                    Role studentRole = roleRepository.findByName(ERole.ROLE_STUDENT)
+                            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    taiKhoan.setRoles(Set.of(studentRole));
+
+                    accountRepository.save(taiKhoan);
+
+                    // Set the account for the SinhVien
+                    sinhVien.setAccount(taiKhoan);
+                    sinhVienRepository.save(sinhVien);
+
+                    // Send email
+                    sendEmail(email, username, randomPassword);
+                }
+            }
+
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle exception appropriately
+        }
+
+        return null; // You might want to change the return type or behavior based on your needs
+    }
+
+    private String generateUniqueUsername(String baseUsername) {
+        String username = baseUsername.replaceAll(" ", "").toLowerCase();
+        username = Normalizer.normalize(username, Normalizer.Form.NFD);
+        username = username.replaceAll("[^\\p{ASCII}]", "");
+
+        // Check if username already exists, similar to your existing logic
+        int count = 1;
+        String newUsername = username;
+        while (accountRepository.existsByUsername(newUsername)) {
+            newUsername = username + count;
+            count++;
+        }
+
+        return newUsername;
     }
 
     private String getCurrentDateTime() {

@@ -24,7 +24,7 @@ public class ThoiGianDangKy {
     private LocalDate tgkt;
     @Column(name = "ghichu")
     private String ghichu;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "khoa_Id", referencedColumnName = "khoa_Id")
     private Khoa khoa;
    public ThoiGianDangKy(LocalDate tgbd, LocalDate tgkt, String ghichu, Khoa khoa){

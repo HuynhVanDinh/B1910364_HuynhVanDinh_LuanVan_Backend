@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -64,6 +65,23 @@ public class SinhVienController {
                                                   ) {
         SinhVien createdSinhVien = sinhVienService.createSinhVien(sinhVienDto, lopId, email);
         return ResponseEntity.ok(createdSinhVien);
+    }
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/createFromExcel")
+    public ResponseEntity<?> createSinhVienFromExcel(@RequestParam("file") MultipartFile file) {
+//        try {
+            SinhVien sinhVien = sinhVienService.createSinhVienFromExcel(file);
+            if (sinhVien != null) {
+                return ResponseEntity.ok("SinhVien created successfully.");
+            } else {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error creating SinhVien.");
+            }
+//        }
+//        catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                    .body("Error processing the Excel file.");
+//        }
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{sinhvienId}")
